@@ -15,7 +15,7 @@ class Rigid_Body {
   float mass;
   float invMass;
   
-  Rigid_Body(int x, int y, float m) {
+  Rigid_Body(float x, float   y, float m) {
     mass = m;
     invMass = 1/mass;
     position = new PVector(x, y);
