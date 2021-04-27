@@ -10,7 +10,7 @@ class Level {
   float tile_size;
   int tiles;
   String[][] level_data;
-  String[][] entity_data;
+  String[] entity_data_list;
   
   Level(int level_id) {
     this.level_id = level_id;
@@ -18,16 +18,25 @@ class Level {
   }
   
   void create_entities() {
-    for (int i = 0; i < tiles; i++) {
-      for (int j = 0; j < tiles; j++) {
-        switch(entity_data[i][j]){
-          case "p":
-            player = new Player(tile_size*j+tile_size/2, tile_size*i+tile_size/2, 0.8);
-            break;
-        }
-          
+    
+    obstacles = new ArrayList<Obstacle>();
+    
+    for (String s : entity_data_list) {
+      String[] entity_data = s.split(",");
+      
+      int x_pos = Integer.parseInt(entity_data[1]);
+      int y_pos = Integer.parseInt(entity_data[2]);
+      
+      switch (entity_data[0]) {
+        case "p":
+          player = new Player(tile_size*x_pos+tile_size/2, tile_size*y_pos+tile_size/2, 0.8);
+          break;
+        case "s":
+          obstacles.add(new Spikes(tile_size*x_pos, tile_size*y_pos, tile_size));
+          break;
       }
     }
+
   }
   
   void loadLevel() {
@@ -35,12 +44,8 @@ class Level {
     String[] level_string_data = loadStrings(level_name);
     
     String entity_name = "levels/level_" + Integer.toString(level_id) + "_entities.txt";
-    String[] entity_string_data = loadStrings(entity_name);
-    
-    if (level_string_data.length != entity_string_data.length || level_string_data[0].length() != entity_string_data[0].length()) {
-      println("Mismatching level and entity file lengths.");
-      exit();
-    }
+    entity_data_list = loadStrings(entity_name);
+
     
     tiles = level_string_data.length;
     
@@ -53,18 +58,14 @@ class Level {
     }
     
     
-    entity_data = new String[tiles][tiles];
+    //entity_data = new String[tiles][tiles];
     
-    for (int i = 0; i < entity_string_data.length; i++) {
-      entity_data[i] = (entity_string_data[i].split(""));
-    }
+    //for (int i = 0; i < entity_string_data.length; i++) {
+    //  entity_data[i] = (entity_string_data[i].split(""));
+    //}
     
     create_entities();
     
-    //println("there are " + level_data.length + " lines");
-    //for (int i = 0 ; i < level_data.length; i++) {
-    //  println(level_data[i]);
-    //}
   }
   
   void draw() {
@@ -75,8 +76,8 @@ class Level {
       for (int j = 0; j < tiles; j++) {
         switch(level_data[i][j]){
           case "0":
-            stroke(0);
-            fill(0);
+            stroke(20);
+            fill(20);
             break;
           case "1":
             stroke(50, 180, 50);

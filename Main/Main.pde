@@ -1,9 +1,11 @@
-import java.util.Iterator;
+import java.util.*;
 
 final int PLAYER_SIZE_PROPORTION = 96;
 final float PLAYER_INIT_X_PROPORTION = 4.0;
 
 final float ENEMY_INIT_X_PROPORTION = 1;
+
+final int SPIKES_PER_TILE = 5;  
 
 final float FORCE_PROPORTION = 9000;
 final float FRICTION_PROPORTION = 10000;  // base friction. surface friction is multiplied by this
@@ -13,6 +15,8 @@ final float PUSH_FORCE_PROPORTION = 16000;
 final int fps = 60;  
 
 float coeffFriction;
+
+List<Obstacle> obstacles;
 
 Player player;
 
@@ -105,22 +109,22 @@ void getOverlapping() {
   // check if player is out-of-bounds
   // check if player has gone too far left
   if (player_pos_x - player.size/2 <= 0) {
-    collided = true;
+    current_level.create_entities();
     return;
   }
   // check if player has gone too far right
   else if (player_pos_x + player.size/2 >= current_level.tiles*tile_size) {
-    collided = true;
+    current_level.create_entities();
     return;
   }
   // check if player has gone too far up
   if (player_pos_y - player.size/2 <= 0) {
-    collided = true;
+    current_level.create_entities();
     return;
   }
   // check if player has gone too far down
   else if (player_pos_y + player.size/2 >= current_level.tiles*tile_size) {
-    collided = true;
+    current_level.create_entities();
     return;
   }
   
@@ -161,7 +165,7 @@ void getOverlapping() {
       float distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
       
       if (distance < player.size/2 && current_level.level_data[i][j].equals("0"))  {
-        collided = true;
+        current_level.create_entities();
       }
       
     }
@@ -194,7 +198,10 @@ void draw() {
   background(0);
   update();
   current_level.draw();
-  if (!collided) {
   player.draw();
+  
+  for (Obstacle o : obstacles) {
+    o.draw();
   }
+  
 }

@@ -1,1 +1,45 @@
 notes on CS4303_P3
+
+
+no need to only update overlapping tiles like in the roguelike game as:
+	- differently shaped entities make it hard (e.g. spinning obstacle)
+	- not as many tiles
+
+
+
+Obstacles:
+- Spinny thing ("o" for orbit)
+- Spikes ("s" for spikes)
+
+
+
+entity data 
+entities have a tile position and other important shit, for example for the player only position is needed
+but for orbiting shit the length, direction and speed are required
+
+Player:
+"p",pos_x,pos_y
+
+Orbit:
+
+
+Spike:
+"s",pos_x,pos_y,time_alive,time_delay
+	- time_alive is the time the spike stays up for
+	- time_delay is the time the spike stays down for
+
+
+Circular saw thiings (think PoE labyrinths)
+"c",pos_x,pos_y,end_pos_x,end_pos_y,size,speed
+
+
+0000000000
+0000000000
+0000000000
+0000000000
+0000000000
+0000000000
+0000000000
+0000000000
+0000000000
+000000000p
