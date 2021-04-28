@@ -32,7 +32,17 @@ class Level {
           player = new Player(tile_size*x_pos+tile_size/2, tile_size*y_pos+tile_size/2, 0.8);
           break;
         case "s":
-          obstacles.add(new Spikes(tile_size*x_pos, tile_size*y_pos, tile_size));
+          float seconds_alive = Float.parseFloat(entity_data[3]);
+          float seconds_delay = Float.parseFloat(entity_data[4]);
+          obstacles.add(new Spikes(tile_size*x_pos, tile_size*y_pos, tile_size, seconds_alive, seconds_delay));
+          break;
+        case "o":
+          float radius = Float.parseFloat(entity_data[3]);
+          float init_dir = Float.parseFloat(entity_data[4]);
+          float weight = Float.parseFloat(entity_data[5]);
+          float speed = Float.parseFloat(entity_data[6]);
+          Boolean centred = entity_data[7].equals("1");
+          obstacles.add(new Orbiter(tile_size*x_pos, tile_size*y_pos, radius, init_dir, weight, speed, centred, tile_size));
           break;
       }
     }
@@ -76,8 +86,8 @@ class Level {
       for (int j = 0; j < tiles; j++) {
         switch(level_data[i][j]){
           case "0":
-            stroke(20);
-            fill(20);
+            stroke(0, 100, 200);
+            fill(0, 100, 200);
             break;
           case "1":
             stroke(50, 180, 50);

@@ -18,19 +18,24 @@ entities have a tile position and other important shit, for example for the play
 but for orbiting shit the length, direction and speed are required
 
 Player:
-"p",pos_x,pos_y
+"p", pos_x, pos_y
 
-Orbit:
+Orbiter:
+"o", pos_x, pos_y, radius, start_direction, width, speed, centred
+	- start_direction is given in degrees, then converted to radians
+	- radius is given in tiles; e.g. a radius of 4 would have the orbiter cover four tiles lengths'
+	- speed is the time taken to make one full rotation
+	- centred refers to if the orbiter is in the middle of a tile or in the intersection between four tiles
 
 
 Spike:
-"s",pos_x,pos_y,time_alive,time_delay
-	- time_alive is the time the spike stays up for
-	- time_delay is the time the spike stays down for
+"s", pos_x, pos_y, time_alive, time_delay
+	- time_alive is the time the spike stays up for in seconds
+	- time_delay is the time the spike stays down for in seconds
 
 
-Circular saw thiings (think PoE labyrinths)
-"c",pos_x,pos_y,end_pos_x,end_pos_y,size,speed
+Circular saw things (think PoE labyrinths)
+"c", pos_x, pos_y, end_pos_x, end_pos_y, size,speed
 
 
 0000000000
