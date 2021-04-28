@@ -140,6 +140,8 @@ void getOverlapping() {
         restartLevel();
       }
       
+      //if (current_level.level_data[i][j].equals("0")) {
+      
       float closest_x = player_pos_x;
       float closest_y = player_pos_y;
       
@@ -163,10 +165,11 @@ void getOverlapping() {
       float dist_x = player_pos_x - closest_x;
       float dist_y = player_pos_y - closest_y;
       float distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
-      
+      // && current_level.level_data[i][j].equals("0")
       if (distance < player.size/2 && current_level.level_data[i][j].equals("0"))  {
         current_level.create_entities();
       }
+      //}
       
     }
     
@@ -192,6 +195,12 @@ void update() {
   player.integrate();
   
   getOverlapping();
+  
+  for (Obstacle o : obstacles) {
+    if (o.collision(player)) {
+      current_level.create_entities();
+    }
+  }
 }
 
 void draw() {

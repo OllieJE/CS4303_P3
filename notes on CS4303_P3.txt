@@ -38,6 +38,11 @@ Circular saw things (think PoE labyrinths)
 "c", pos_x, pos_y, end_pos_x, end_pos_y, size,speed
 
 
+
+EXTRA SHIT:
+- slowly rotate the whole map lul
+
+
 0000000000
 0000000000
 0000000000

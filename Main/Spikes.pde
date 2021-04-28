@@ -6,6 +6,7 @@ class Spikes extends Obstacle {
   float increment;
   float time_alive;
   float time_delay;
+  float tile_size;
   Boolean active;
   int timer;
   
@@ -15,6 +16,7 @@ class Spikes extends Obstacle {
     this.increment = tile_size/(SPIKES_PER_TILE+1);  // how many "gaps" there are between each layer of spikes and the edges of the tile
     time_alive = fps*seconds_alive;
     time_delay = fps*seconds_delay;
+    this.tile_size = tile_size;
     active = true;
     state = max_state;
     timer = 0;
@@ -71,6 +73,45 @@ class Spikes extends Obstacle {
   }
   
   Boolean collision(Player p) {
+    
+    // only check if the spikes are active
+    if (active) {
+      float player_pos_x = player.position.x;
+      float player_pos_y = player.position.y;
+      
+      float closest_x = player_pos_x;
+      float closest_y = player_pos_y;
+      
+      // check if player is inside the spikes (i.e. spikes become active with player on top)
+      if (player.position.x >= position.x && player.position.x <= position.x+tile_size && player.position.y >= position.y && player.position.y <= position.y+tile_size) {
+        return true;
+      }
+      
+      // check if player is to the left of the spikes
+      if (player.position.x < position.x) {
+        closest_x = position.x;
+      }
+      // check if player is to the right of the spikes
+      else if (player.position.x > position.x+tile_size) {
+        closest_x = position.x+tile_size;
+      }
+      // check if player is above the spikes
+      if (player.position.y < position.y) {
+        closest_y = position.y;
+      }
+      // check if player is below the spikes
+      else if (player.position.y >= position.y+tile_size) {
+        closest_y = position.y+tile_size;
+      }
+      
+      float dist_x = player_pos_x - closest_x;
+      float dist_y = player_pos_y - closest_y;
+      float distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
+      
+      if (distance < player.size/2)  {
+        return true;
+      }
+    }
     return false;
   }
 }
