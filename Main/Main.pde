@@ -1,16 +1,18 @@
 import java.util.*;
 
-final int PLAYER_SIZE_PROPORTION = 96;
+final int PLAYER_ANIMATION_FRAMES = 6;
+final int PLAYER_SIZE_PROPORTION = 60;
 final float PLAYER_INIT_X_PROPORTION = 4.0;
+
+final float PLAYER_TURNING_SPEED = PI/64;  // base turning speed, should be slowre on lower friction areas
 
 final float ENEMY_INIT_X_PROPORTION = 1;
 
 final int SPIKES_PER_TILE = 5;  
 
-final float FORCE_PROPORTION = 9000;
-final float FRICTION_PROPORTION = 10000;  // base friction. surface friction is multiplied by this
+final float FRICTION_PROPORTION = 300000;  // base friction. surface friction is multiplied by this
 
-final float PUSH_FORCE_PROPORTION = 16000;
+final float PUSH_FORCE_PROPORTION = 32000;
 
 final int fps = 60;  
 
@@ -52,16 +54,20 @@ void keyPressed() {
      switch (keyCode) {
        case LEFT :
          movingLeft = true ;
+         movingRight = false;
          break ;
        case RIGHT :
          movingRight = true ;
+         movingLeft = false;
          break ;
          
        case UP :
          movingUp = true ;
+         movingDown = false;
          break ;
        case DOWN :
          movingDown = true ;
+         movingUp = false;
          break ;
      }
   }

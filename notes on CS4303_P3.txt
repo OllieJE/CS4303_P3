@@ -43,6 +43,27 @@ EXTRA SHIT:
 - slowly rotate the whole map lul
 
 
+rotating the player is difficult because obviously they need to rotate the smallest amount right
+but because the shit is lke this:
+ 
+        0
+        ^
+1.5 PI<- -> HALF_PI
+        "
+       PI
+
+ we can't just check if the target orientation is bigger or smaller
+so we see if it is bigger by at least PI, if it is then rotate the other way
+
+
+
+
+OTHER SHIT BESIDES OBSTAcLES TO ADD:
+- BOSS FIGHT
+- HELL YEAH THAT'S IT BUT IUTS GONNA BE SICK
+- ALSO MUSIC AND SOUND EFFECTS
+
+
 0000000000
 0000000000
 0000000000

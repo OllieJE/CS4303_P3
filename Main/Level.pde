@@ -1,11 +1,5 @@
 class Level {
   
-  // 0 = wall
-  // 1 = default path
-  // 2 = high-friction ground
-  // p = player start
-  // g = goal
-  
   int level_id;
   float tile_size;
   int tiles;
@@ -30,6 +24,7 @@ class Level {
       switch (entity_data[0]) {
         case "p":
           player = new Player(tile_size*x_pos+tile_size/2, tile_size*y_pos+tile_size/2, 0.8);
+          forceRegistry.add(player, friction);
           break;
         case "s":
           float seconds_alive = Float.parseFloat(entity_data[3]);
@@ -90,8 +85,10 @@ class Level {
             fill(0, 100, 200);
             break;
           case "1":
-            stroke(50, 180, 50);
-            fill(50, 180, 50);
+            //stroke(50, 180, 50);
+            //fill(50, 180, 50);
+            stroke(200, 175, 120);
+            fill(200, 175, 120);
             break;
             
         }
