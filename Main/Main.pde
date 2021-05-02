@@ -16,6 +16,11 @@ final float PUSH_FORCE_PROPORTION = 32000;
 
 final int fps = 60;  
 
+final HashMap<String, Float> TILE_FRICTIONS = new HashMap<String, Float>() {{
+    put("1", 1.0);
+    put("2", 5.0);
+}};
+
 float coeffFriction;
 
 List<Obstacle> obstacles;
@@ -134,16 +139,19 @@ void getOverlapping() {
     return;
   }
   
+  // want to get the highest-friction tile the player is on
+  float highest_friction = 1.0;
+  
   // iterate through the nine tiles the player could be colliding with
   for (int i = (tile_y-1 >= 0 ? tile_y-1 : 0) ; i <= (tile_y+1 < current_level.tiles ? tile_y+1 : current_level.tiles-1); i++) {
     // if the player goes off the left or right edges of the level
     if (i < 0 || i >= current_level.tiles) {
-      restartLevel();
+      current_level.create_entities();
     }
     
-    for (int j = (tile_x-1 >= 0 ? tile_x-1 : 0) ; j <= (tile_x+1 <= current_level.tiles ? tile_x+1 : current_level.tiles-1); j++) {
+    for (int j = (tile_x-1 >= 0 ? tile_x-1 : 0) ; j <= (tile_x+1 < current_level.tiles ? tile_x+1 : current_level.tiles-1); j++) {
       if (j < 0 || j >= current_level.tiles) {
-        restartLevel();
+        current_level.create_entities();
       }
       
       //if (current_level.level_data[i][j].equals("0")) {
@@ -171,15 +179,30 @@ void getOverlapping() {
       float dist_x = player_pos_x - closest_x;
       float dist_y = player_pos_y - closest_y;
       float distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
+      
+      String tile_type = current_level.level_data[i][j];
+      
       // && current_level.level_data[i][j].equals("0")
-      if (distance < player.size/2 && current_level.level_data[i][j].equals("0"))  {
-        current_level.create_entities();
+      if (distance < player.size/2)  {
+        if (tile_type.equals("0")) {
+          current_level.create_entities();
+        } else if (TILE_FRICTIONS.keySet().contains(tile_type)) {
+          if (TILE_FRICTIONS.get(tile_type) > highest_friction) {
+            highest_friction = TILE_FRICTIONS.get(tile_type);
+          }
+          
+        }
       }
+      
       //}
+       
+      
+      
       
     }
     
   }
+  player.player_friction.c = coeffFriction*highest_friction;
   //exit();
 }
 

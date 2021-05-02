@@ -1,5 +1,5 @@
 public class Friction extends ForceGenerator {
-  private float c;
+  float c;
   
   Friction (float c) {
     this.c = c;

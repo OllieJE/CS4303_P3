@@ -1,6 +1,11 @@
 notes on CS4303_P3
 
 
+tilemap keys:
+1: regular, low-friction surface
+2: high-friction surface
+
+
 no need to only update overlapping tiles like in the roguelike game as:
 	- differently shaped entities make it hard (e.g. spinning obstacle)
 	- not as many tiles
@@ -62,6 +67,16 @@ OTHER SHIT BESIDES OBSTAcLES TO ADD:
 - BOSS FIGHT
 - HELL YEAH THAT'S IT BUT IUTS GONNA BE SICK
 - ALSO MUSIC AND SOUND EFFECTS
+
+
+boss fight:
+- circular attack with gaps (think gorgun's attacks)
+- reach certain tiles in time
+
+
+abilities:
+- dash in facing direction
+- 
 
 
 0000000000

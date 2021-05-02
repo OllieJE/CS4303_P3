@@ -2,13 +2,15 @@ class Player extends Rigid_Body {
     
   Animation animation;
   float size;
+  Friction player_friction;
   
-  Player(float x, float y, float m) {
+  Player(float x, float y, float m, Friction f) {
     super(x, y, m);
     this.size = displayWidth/PLAYER_SIZE_PROPORTION;
     animation= new Animation("crab", PLAYER_ANIMATION_FRAMES);
     orientation = PI+HALF_PI;
     targetOrientation = PI+HALF_PI;
+    player_friction = f;
   }
   
   float get_target_dir() {
