@@ -16,6 +16,8 @@ class Orbiter extends Obstacle {
     this.centred = centred ? 0.5 : 0;
     this.position.x += tile_size*this.centred;
     this.position.y += tile_size*this.centred;
+    
+    this.radius += this.centred*tile_size;
   }
   
   void draw() {
@@ -40,6 +42,9 @@ class Orbiter extends Obstacle {
   Boolean collision (Player p) {
     // check if the player is colliding with either end of the line
     
+    float p1_x = position.x;
+    float p1_y = position.y;
+    
     float dist_x = player.position.x - position.x;
     float dist_y = player.position.y - position.y;
     float distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
@@ -49,7 +54,7 @@ class Orbiter extends Obstacle {
     }
     
     float p2_x = position.x + radius*cos(dir+HALF_PI);
-    float p2_y = position.x + radius*sin(dir+HALF_PI);
+    float p2_y = position.y + radius*sin(dir+HALF_PI);
     
     dist_x = player.position.x - p2_x;
     dist_y = player.position.y - p2_y;
@@ -60,12 +65,12 @@ class Orbiter extends Obstacle {
     }
     
     // get closest point on unbounded line
-    float dot = ( ((player.position.x-position.x)*(p2_x-position.x)) + ((player.position.y-position.y)*(p2_y-position.y)) ) / pow(radius,2);
-    float closestX = position.x + (dot * (p2_x-position.x));
-    float closestY = position.y + (dot * (p2_y-position.y));
+    float dot = ( ((player.position.x-p1_x)*(p2_x-p1_x)) + ((player.position.y-p1_y)*(p2_y-p1_y)) ) / pow(radius,2);
+    float closestX = p1_x + (dot * (p2_x-p1_x));
+    float closestY = p1_y + (dot * (p2_y-p1_y));
     
     // check if the point found is on the line
-    float p1_dist = dist(closestX, closestY, position.x, position.y);
+    float p1_dist = dist(closestX, closestY, p1_x, p1_y);
     float p2_dist = dist(closestX, closestY, p2_x, p2_y);
     
     if (p1_dist+p2_dist >= radius && p1_dist+p2_dist <= radius) {

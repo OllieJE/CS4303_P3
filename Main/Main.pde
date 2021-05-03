@@ -21,9 +21,15 @@ final HashMap<String, Float> TILE_FRICTIONS = new HashMap<String, Float>() {{
     put("2", 7.0);
 }};
 
+final HashMap<String, int[]> COLOURS = new HashMap<String, int[]>() {{
+    put("o", new int[]{255, 160, 0});
+}};
+
 float coeffFriction;
 
 List<Obstacle> obstacles;
+List<Key> keys;
+List<Gate> gates;
 
 Player player;
 
@@ -41,6 +47,7 @@ Friction friction;
 
 Level current_level;
 
+
 void setup() {
   fullScreen();
   frameRate(fps);
@@ -50,8 +57,8 @@ void setup() {
   forceRegistry = new ForceRegistry();
   friction = new Friction(coeffFriction);
   //forceRegistry.add(player, friction);
-  current_level = new Level(1);
-  
+  current_level = new Level(2);
+ 
 }
 
 void keyPressed() {
@@ -75,8 +82,14 @@ void keyPressed() {
          movingUp = false;
          break ;
      }
+  } else {
+    if (key == '1') {
+      if (player.boostCooldown <= 0) {
+        player.boost();
+      }
+    }
   }
-}
+} 
 
 void keyReleased() {
   if (key == CODED) {
@@ -124,7 +137,7 @@ void getOverlapping() {
     return;
   }
   // check if player has gone too far right
-  else if (player_pos_x + player.size/2 >= current_level.tiles*tile_size) {
+  else if (player_pos_x + player.size/2 >= current_level.tilesX*tile_size) {
     current_level.create_entities();
     return;
   }
@@ -134,7 +147,7 @@ void getOverlapping() {
     return;
   }
   // check if player has gone too far down
-  else if (player_pos_y + player.size/2 >= current_level.tiles*tile_size) {
+  else if (player_pos_y + player.size/2 >= current_level.tilesY*tile_size) {
     current_level.create_entities();
     return;
   }
@@ -143,14 +156,14 @@ void getOverlapping() {
   float highest_friction = 1.0;
   
   // iterate through the nine tiles the player could be colliding with
-  for (int i = (tile_y-1 >= 0 ? tile_y-1 : 0) ; i <= (tile_y+1 < current_level.tiles ? tile_y+1 : current_level.tiles-1); i++) {
+  for (int i = (tile_y-1 >= 0 ? tile_y-1 : 0) ; i <= (tile_y+1 < current_level.tilesY ? tile_y+1 : current_level.tilesY-1); i++) {
     // if the player goes off the left or right edges of the level
-    if (i < 0 || i >= current_level.tiles) {
+    if (i < 0 || i >= current_level.tilesY) {
       current_level.create_entities();
     }
     
-    for (int j = (tile_x-1 >= 0 ? tile_x-1 : 0) ; j <= (tile_x+1 < current_level.tiles ? tile_x+1 : current_level.tiles-1); j++) {
-      if (j < 0 || j >= current_level.tiles) {
+    for (int j = (tile_x-1 >= 0 ? tile_x-1 : 0) ; j <= (tile_x+1 < current_level.tilesX ? tile_x+1 : current_level.tilesX-1); j++) {
+      if (j < 0 || j >= current_level.tilesX) {
         current_level.create_entities();
       }
       
@@ -223,11 +236,23 @@ void update() {
   forceRegistry.updateForces();
   player.integrate();
   
-  getOverlapping();
+  //getOverlapping();
   
   for (Obstacle o : obstacles) {
     if (o.collision(player)) {
       current_level.create_entities();
+    }
+  }
+  
+  for (Key k : keys) {
+    if (k.collision(player)) {
+      for (Gate g : gates) {
+        if (g.colourString.equals(k.colourString)) {
+          g.active = false;
+          
+        }
+      }
+      k.active = false;
     }
   }
 }
@@ -240,6 +265,10 @@ void draw() {
   
   for (Obstacle o : obstacles) {
     o.draw();
+  }
+  
+  for (Key k : keys) {
+    k.draw();
   }
   
 }

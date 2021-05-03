@@ -1,8 +1,10 @@
 abstract class Obstacle {
   
   PVector position;
+  boolean active;
   
   Obstacle(float x, float y) {
+    active = true;
     position = new PVector(x, y);
   }
   

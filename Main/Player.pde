@@ -4,13 +4,21 @@ class Player extends Rigid_Body {
   float size;
   Friction player_friction;
   
-  Player(float x, float y, float m, Friction f) {
+  int boostTime;
+  int boostCooldown;
+  PVector boostDir;
+  
+  Player(float x, float y, float m, Friction f, int facing) {
     super(x, y, m);
     this.size = displayWidth/PLAYER_SIZE_PROPORTION;
     animation= new Animation("crab", PLAYER_ANIMATION_FRAMES);
-    orientation = PI+HALF_PI;
-    targetOrientation = PI+HALF_PI;
+    orientation = HALF_PI*facing;
+    targetOrientation = orientation;
     player_friction = f;
+    
+    boostDir = new PVector();
+    boostTime = 0;
+    boostCooldown = 0;
   }
   
   float get_target_dir() {
@@ -39,6 +47,14 @@ class Player extends Rigid_Body {
     return orientation;
   }
   
+  void boost() {
+    boostTime  = 10;
+    boostCooldown = 120;
+    
+    boostDir = new PVector(sin(orientation), -1*cos(orientation));
+    boostDir.normalize();
+  }
+  
   void draw() {
     
     boolean button_pressed = movingLeft || movingRight || movingUp || movingDown;
@@ -47,6 +63,21 @@ class Player extends Rigid_Body {
     fill(150, 50, 50);
     //circle(position.x, position.y, size);
     //image(animation.images[animation.frame], position.x, position.y);
+    
+    
+    if (boostCooldown > 0) {
+      boostCooldown--;
+    }
+    
+    if (boostTime > 0) {
+      boostTime--;
+      float vMag = velocity.mag();
+      velocity.x = boostDir.x*vMag;
+      velocity.y = boostDir.y*vMag;
+      
+      position.x += boostDir.x*(size/4);
+      position.y += boostDir.y*(size/4);
+    }
     
     pushMatrix();
     translate(position.x, position.y);

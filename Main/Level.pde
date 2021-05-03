@@ -2,7 +2,8 @@ class Level {
   
   int level_id;
   float tile_size;
-  int tiles;
+  int tilesX;
+  int tilesY;
   String[][] level_data;
   String[] entity_data_list;
   
@@ -14,6 +15,8 @@ class Level {
   void create_entities() {
     
     obstacles = new ArrayList<Obstacle>();
+    keys = new ArrayList<Key>();
+    gates = new ArrayList<Gate>();
     
     for (String s : entity_data_list) {
       String[] entity_data = s.split(",");
@@ -23,7 +26,8 @@ class Level {
       
       switch (entity_data[0]) {
         case "p":
-          player = new Player(tile_size*x_pos+tile_size/2, tile_size*y_pos+tile_size/2, 0.8, friction);
+          int facing = Integer.parseInt(entity_data[3]);
+          player = new Player(tile_size*x_pos+tile_size/2, tile_size*y_pos+tile_size/2, 0.8, friction, facing);
           forceRegistry.add(player, friction);
           break;
         case "s":
@@ -48,6 +52,17 @@ class Level {
           centred = entity_data[8].equals("1");
           obstacles.add(new CircularSaw(tile_size*x_pos, tile_size*y_pos, tile_size*dx, tile_size*dy, size, speed, delay, centred, tile_size));
           break;
+        case "G":
+          String colourString = entity_data[3];
+          int edge = Integer.parseInt(entity_data[4]);
+          Gate g = new Gate(tile_size*x_pos, tile_size*y_pos, colourString, edge, tile_size);
+          obstacles.add(g);
+          gates.add(g);
+          break;
+        case "k":
+          colourString = entity_data[3];
+          keys.add(new Key(tile_size*x_pos, tile_size*y_pos, colourString, tile_size));
+          break;
       }
     }
 
@@ -60,12 +75,12 @@ class Level {
     String entity_name = "levels/level_" + Integer.toString(level_id) + "_entities.txt";
     entity_data_list = loadStrings(entity_name);
 
+    tilesX = level_string_data[0].length();
+    tilesY = level_string_data.length;
     
-    tiles = level_string_data.length;
+    tile_size = displayHeight/tilesY;
     
-    tile_size = displayHeight/tiles;
-    
-    level_data = new String[tiles][tiles];
+    level_data = new String[tilesX][tilesY];
     
     for (int i = 0; i < level_string_data.length; i++) {
       level_data[i] = (level_string_data[i].split(""));
@@ -86,8 +101,8 @@ class Level {
     strokeWeight(1);
     fill(0);
     
-    for (int i = 0; i < tiles; i++) {
-      for (int j = 0; j < tiles; j++) {
+    for (int i = 0; i < tilesY; i++) {
+      for (int j = 0; j < tilesX; j++) {
         switch(level_data[i][j]){
           case "0":
             stroke(0, 100, 200);
