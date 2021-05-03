@@ -51,24 +51,26 @@ class Player extends Rigid_Body {
     pushMatrix();
     translate(position.x, position.y);
     
+    float turn_speed = min(PLAYER_TURNING_SPEED*(player_friction.c/coeffFriction), PLAYER_TURNING_SPEED*4.0);
+    
     if (button_pressed) {
       targetOrientation = get_target_dir();
-      if (abs(targetOrientation - orientation) <= PLAYER_TURNING_SPEED) {
+      if (abs(targetOrientation - orientation) <= turn_speed) {
         orientation = targetOrientation ;
       } else {
         
         float diff = abs(targetOrientation - orientation);
         if (targetOrientation > orientation) {
           if (diff >= PI) {
-            orientation -= PLAYER_TURNING_SPEED;
+            orientation -= turn_speed;
           } else {
-            orientation += PLAYER_TURNING_SPEED;
+            orientation += turn_speed;
           }
         } else {
           if (diff >= PI) {
-            orientation += PLAYER_TURNING_SPEED;
+            orientation += turn_speed;
           } else {
-            orientation -= PLAYER_TURNING_SPEED;
+            orientation -= turn_speed;
           }
         }
       }

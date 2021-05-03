@@ -18,7 +18,7 @@ final int fps = 60;
 
 final HashMap<String, Float> TILE_FRICTIONS = new HashMap<String, Float>() {{
     put("1", 1.0);
-    put("2", 5.0);
+    put("2", 7.0);
 }};
 
 float coeffFriction;

@@ -39,6 +39,15 @@ class Level {
           Boolean centred = entity_data[7].equals("1");
           obstacles.add(new Orbiter(tile_size*x_pos, tile_size*y_pos, radius, init_dir, weight, speed, centred, tile_size));
           break;
+        case "c":
+          int dx = Integer.parseInt(entity_data[3]);
+          int dy = Integer.parseInt(entity_data[4]);
+          float size = Float.parseFloat(entity_data[5]);
+          speed = Float.parseFloat(entity_data[6]);
+          float delay = Float.parseFloat(entity_data[7]);
+          centred = entity_data[8].equals("1");
+          obstacles.add(new CircularSaw(tile_size*x_pos, tile_size*y_pos, tile_size*dx, tile_size*dy, size, speed, delay, centred, tile_size));
+          break;
       }
     }
 

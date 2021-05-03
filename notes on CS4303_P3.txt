@@ -40,8 +40,9 @@ Spike:
 
 
 Circular saw things (think PoE labyrinths)
-"c", pos_x, pos_y, end_pos_x, end_pos_y, size,speed
-
+"c", pos_x, pos_y, end_pos_x, end_pos_y, size, speed, delay, centred
+	- delay is the time the saw stops at each end in seconds
+	- speed is given in tiles/second
 
 
 EXTRA SHIT:
