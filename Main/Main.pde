@@ -10,11 +10,22 @@ final float ENEMY_INIT_X_PROPORTION = 1;
 
 final int SPIKES_PER_TILE = 5;  
 
+final float UI_HEIGHT_PROPORTION = 0.2;
+
 final float FRICTION_PROPORTION = 300000;  // base friction. surface friction is multiplied by this
 
 final float PUSH_FORCE_PROPORTION = 32000;
 
 final int fps = 60;  
+float ui_height;
+
+int level;
+
+Player player;
+List<Obstacle> obstacles;
+List<Key> keys;
+List<Gate> gates;
+Goal goal;
 
 final HashMap<String, Float> TILE_FRICTIONS = new HashMap<String, Float>() {{
     put("1", 1.0);
@@ -26,12 +37,6 @@ final HashMap<String, int[]> COLOURS = new HashMap<String, int[]>() {{
 }};
 
 float coeffFriction;
-
-List<Obstacle> obstacles;
-List<Key> keys;
-List<Gate> gates;
-
-Player player;
 
 Boolean collided = false;
 
@@ -51,13 +56,18 @@ Level current_level;
 void setup() {
   fullScreen();
   frameRate(fps);
+  
+  ui_height = UI_HEIGHT_PROPORTION*displayHeight;
   //player = new Player(displayWidth/2, displayHeight/2, 0.8);
   
   coeffFriction = displayWidth/FRICTION_PROPORTION;   
   forceRegistry = new ForceRegistry();
   friction = new Friction(coeffFriction);
   //forceRegistry.add(player, friction);
-  current_level = new Level(2);
+  
+  level = 1;
+  
+  current_level = new Level(1);
  
 }
 
@@ -84,9 +94,8 @@ void keyPressed() {
      }
   } else {
     if (key == '1') {
-      if (player.boostCooldown <= 0) {
-        player.boost();
-      }
+      player.boost();
+      
     }
   }
 } 
@@ -118,106 +127,100 @@ void restartLevel() {
   return;
 }
 
-void getOverlapping() {
+//void getOverlapping() {
   
-  float tile_size = current_level.tile_size;
+//  float tile_size = current_level.tile_size;
   
-  // get tile the center of the player is on, as well as the position of the player's center
-  float player_pos_x = player.position.x;
-  float player_pos_y = player.position.y;
+//  // get tile the center of the player is on, as well as the position of the player's center
+//  float player_pos_x = player.position.x;
+//  float player_pos_y = player.position.y;
   
-  int tile_x = int(player_pos_x/tile_size);
-  int tile_y = int(player_pos_y/tile_size);
+//  int tile_x = int(player_pos_x/tile_size);
+//  int tile_y = int(player_pos_y/tile_size);
   
-  // TODO: FIX THIS TO HANDLE LEVEL CENTERING
-  // check if player is out-of-bounds
-  // check if player has gone too far left
-  if (player_pos_x - player.size/2 <= 0) {
-    current_level.create_entities();
-    return;
-  }
-  // check if player has gone too far right
-  else if (player_pos_x + player.size/2 >= current_level.tilesX*tile_size) {
-    current_level.create_entities();
-    return;
-  }
-  // check if player has gone too far up
-  if (player_pos_y - player.size/2 <= 0) {
-    current_level.create_entities();
-    return;
-  }
-  // check if player has gone too far down
-  else if (player_pos_y + player.size/2 >= current_level.tilesY*tile_size) {
-    current_level.create_entities();
-    return;
-  }
+//  // TODO: FIX THIS TO HANDLE LEVEL CENTERING
+//  // check if player is out-of-bounds
+//  // check if player has gone too far left
+//  if (player_pos_x - player.size/2 <= 0) {
+//    current_level.create_entities();
+//    return;
+//  }
+//  // check if player has gone too far right
+//  else if (player_pos_x + player.size/2 >= current_level.tilesX*tile_size) {
+//    current_level.create_entities();
+//    return;
+//  }
+//  // check if player has gone too far up
+//  if (player_pos_y - player.size/2 <= 0) {
+//    current_level.create_entities();
+//    return;
+//  }
+//  // check if player has gone too far down
+//  else if (player_pos_y + player.size/2 >= current_level.tilesY*tile_size) {
+//    current_level.create_entities();
+//    return;
+//  }
   
-  // want to get the highest-friction tile the player is on
-  float highest_friction = 1.0;
+//  // want to get the highest-friction tile the player is on
+//  float highest_friction = 1.0;
   
-  // iterate through the nine tiles the player could be colliding with
-  for (int i = (tile_y-1 >= 0 ? tile_y-1 : 0) ; i <= (tile_y+1 < current_level.tilesY ? tile_y+1 : current_level.tilesY-1); i++) {
-    // if the player goes off the left or right edges of the level
-    if (i < 0 || i >= current_level.tilesY) {
-      current_level.create_entities();
-    }
+//  // iterate through the nine tiles the player could be colliding with
+//  for (int i = (tile_y-1 >= 0 ? tile_y-1 : 0) ; i <= (tile_y+1 < current_level.tilesY ? tile_y+1 : current_level.tilesY-1); i++) {
+//    // if the player goes off the left or right edges of the level
+//    if (i < 0 || i >= current_level.tilesY) {
+//      current_level.create_entities();
+//    }
     
-    for (int j = (tile_x-1 >= 0 ? tile_x-1 : 0) ; j <= (tile_x+1 < current_level.tilesX ? tile_x+1 : current_level.tilesX-1); j++) {
-      if (j < 0 || j >= current_level.tilesX) {
-        current_level.create_entities();
-      }
+//    for (int j = (tile_x-1 >= 0 ? tile_x-1 : 0) ; j <= (tile_x+1 < current_level.tilesX ? tile_x+1 : current_level.tilesX-1); j++) {
+//      if (j < 0 || j >= current_level.tilesX) {
+//        current_level.create_entities();
+//      }
       
-      //if (current_level.level_data[i][j].equals("0")) {
+//      //if (current_level.level_data[i][j].equals("0")) {
       
-      float closest_x = player_pos_x;
-      float closest_y = player_pos_y;
+//      float closest_x = player_pos_x;
+//      float closest_y = player_pos_y;
       
-      // if player is to the left of the tile, check left edge
-      if (tile_x < j) {
-        closest_x = j*tile_size;
-      }
-      // if player it to the right of the tile, check right edge
-      else if (tile_x > j) {
-        closest_x = j*tile_size+tile_size;
-      }
-      // if player is above tile, check top edge
-      if (tile_y < i) {
-        closest_y = i*tile_size;
-      }
-      // if player is below tile, check bottom edge
-      else if (tile_y > i) {
-        closest_y =  i*tile_size+tile_size;
-      }
+//      // if player is to the left of the tile, check left edge
+//      if (tile_x < j) {
+//        closest_x = j*tile_size;
+//      }
+//      // if player it to the right of the tile, check right edge
+//      else if (tile_x > j) {
+//        closest_x = j*tile_size+tile_size;
+//      }
+//      // if player is above tile, check top edge
+//      if (tile_y < i) {
+//        closest_y = i*tile_size;
+//      }
+//      // if player is below tile, check bottom edge
+//      else if (tile_y > i) {
+//        closest_y =  i*tile_size+tile_size;
+//      }
       
-      float dist_x = player_pos_x - closest_x;
-      float dist_y = player_pos_y - closest_y;
-      float distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
+//      float dist_x = player_pos_x - closest_x;
+//      float dist_y = player_pos_y - closest_y;
+//      float distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
       
-      String tile_type = current_level.level_data[i][j];
+//      String tile_type = current_level.level_data[i][j];
       
-      // && current_level.level_data[i][j].equals("0")
-      if (distance < player.size/2)  {
-        if (tile_type.equals("0")) {
-          current_level.create_entities();
-        } else if (TILE_FRICTIONS.keySet().contains(tile_type)) {
-          if (TILE_FRICTIONS.get(tile_type) > highest_friction) {
-            highest_friction = TILE_FRICTIONS.get(tile_type);
-          }
+//      // && current_level.level_data[i][j].equals("0")
+//      if (distance < player.size/2)  {
+//        if (tile_type.equals("0")) {
+//          current_level.create_entities();
+//        } else if (TILE_FRICTIONS.keySet().contains(tile_type)) {
+//          if (TILE_FRICTIONS.get(tile_type) > highest_friction) {
+//            highest_friction = TILE_FRICTIONS.get(tile_type);
+//          }
           
-        }
-      }
+//        }
+//      }
       
-      //}
-       
-      
-      
-      
-    }
+//    }
     
-  }
-  player.player_friction.c = coeffFriction*highest_friction;
-  //exit();
-}
+//  }
+//  player.player_friction.c = coeffFriction*highest_friction;
+//}
 
 void update() {
   if (movingLeft) { 
@@ -236,7 +239,8 @@ void update() {
   forceRegistry.updateForces();
   player.integrate();
   
-  //getOverlapping();
+  //current_level.handleCollision();
+  current_level.getOverlapping();
   
   for (Obstacle o : obstacles) {
     if (o.collision(player)) {
@@ -255,6 +259,11 @@ void update() {
       k.active = false;
     }
   }
+  
+  if (goal.collision(player)) {
+    // TODO: DONT JUST HAVE IT GO TO LEVEL 2 EVERY TIME 
+    current_level = new Level(2);
+  }
 }
 
 void draw() {
@@ -263,12 +272,6 @@ void draw() {
   current_level.draw();
   player.draw();
   
-  for (Obstacle o : obstacles) {
-    o.draw();
-  }
   
-  for (Key k : keys) {
-    k.draw();
-  }
   
 }

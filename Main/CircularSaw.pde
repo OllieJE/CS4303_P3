@@ -30,7 +30,7 @@ class CircularSaw extends Obstacle {
   }
   
   Boolean collision(Player p) {
-    return position.dist(p.position) <= size/2;
+    return position.dist(p.position) <= size/2+player.size/2;
   }
   
   void move() {

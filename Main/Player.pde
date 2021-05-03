@@ -48,11 +48,13 @@ class Player extends Rigid_Body {
   }
   
   void boost() {
-    boostTime  = 10;
-    boostCooldown = 120;
-    
-    boostDir = new PVector(sin(orientation), -1*cos(orientation));
-    boostDir.normalize();
+    if (boostCooldown <= 0) {
+      boostTime  = 10;
+      boostCooldown = 120;
+      
+      boostDir = new PVector(sin(orientation), -1*cos(orientation));
+      boostDir.normalize();
+    }
   }
   
   void draw() {

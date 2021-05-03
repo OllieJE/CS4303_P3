@@ -18,7 +18,7 @@ class Key {
     if (!active) {
       return false;
     }
-    return (p.position.dist(position) <= p.size/2 || p.position.dist(position) <= size/2);
+    return (p.position.dist(position) <= p.size || p.position.dist(position) <= size);
   }
   
   void draw() {
