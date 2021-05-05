@@ -111,8 +111,9 @@ class Player extends Rigid_Body {
         this.size -= baseSize*.02;
       }
 
-      velocity.x = jumpDir.x*(tile_size/fps);
-      velocity.y = jumpDir.y*(tile_size/fps);
+      // jump over a bit more than a tile's length
+      velocity.x = jumpDir.x*((tile_size*1.2)/fps);
+      velocity.y = jumpDir.y*((tile_size*1.2)/fps);
       
     } else {
       inAir = false;

@@ -228,6 +228,11 @@ void restartLevel() {
 //  player.player_friction.c = coeffFriction*highest_friction;
 //}
 
+void loseLife() {
+  lives--;
+  current_level.create_entities();
+}
+
 void update() {
   if (movingLeft) { 
     player.addForce(new PVector(displayWidth/PUSH_FORCE_PROPORTION*-1, 0)) ;
@@ -246,18 +251,20 @@ void update() {
   player.integrate();
   if (!player.inAir) {
   
-    //current_level.getOverlapping();
+    if (current_level.getOverlapping()) {
+      loseLife();
+    }
       
     for (Obstacle o : obstacles) {
-      if (o.collision(player)) {
-        player.position.x += player.velocity.x*-1;
-        player.position.y += player.velocity.y*-1;
-        player.velocity.mult(0);
-        player.acceleration.mult(0);
-      }
       //if (o.collision(player)) {
-      //  current_level.create_entities();
+      //  player.position.x += player.velocity.x*-1;
+      //  player.position.y += player.velocity.y*-1;
+      //  player.velocity.mult(0);
+      //  player.acceleration.mult(0);
       //}
+      if (o.collision(player)) {
+        loseLife();
+      }
     }
     
     for (Key k : keys) {

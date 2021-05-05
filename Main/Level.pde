@@ -180,7 +180,7 @@ class Level {
     }
   }
   
-  void getOverlapping() {
+  Boolean getOverlapping() {
 
     // get tile the center of the player is on, as well as the position of the player's center
     float player_pos_x = player.position.x;
@@ -193,24 +193,24 @@ class Level {
     // check if player is out-of-bounds
     // check if player has gone too far left
     if (player_pos_x - player.size/2 <= horizontalShift) {
-      current_level.create_entities();
-      return;
+      //current_level.create_entities();
+      return true;
     }
     // check if player has gone too far right
     
     else if (player_pos_x + player.size/2 >= horizontalShift+current_level.tilesX*tile_size) {
-      current_level.create_entities();
-      return;
+      //current_level.create_entities();
+      return true;
     }
     // check if player has gone too far up
     if (player_pos_y - player.size/2 <= 0) {
-      current_level.create_entities();
-      return;
+      //current_level.create_entities();
+      return true;
     }
     // check if player has gone too far down
     else if (player_pos_y + player.size/2 >= current_level.tilesY*tile_size) {
-      current_level.create_entities();
-      return;
+      //current_level.create_entities();
+      return true;
     }
     
     // want to get the highest-friction tile the player is on
@@ -220,12 +220,14 @@ class Level {
     for (int i = (tile_y-1 >= 0 ? tile_y-1 : 0) ; i <= (tile_y+1 < current_level.tilesY ? tile_y+1 : current_level.tilesY-1); i++) {
       // if the player goes off the left or right edges of the level
       if (i < 0 || i >= current_level.tilesY) {
-        current_level.create_entities();
+        //current_level.create_entities();
+        return true;
       }
       
       for (int j = (tile_x-1 >= 0 ? tile_x-1 : 0) ; j <= (tile_x+1 < current_level.tilesX ? tile_x+1 : current_level.tilesX-1); j++) {
         if (j < 0 || j >= current_level.tilesX) {
-          current_level.create_entities();
+          //current_level.create_entities();
+          return true;
         }
                 
         float closest_x = player_pos_x;
@@ -257,7 +259,8 @@ class Level {
         // && current_level.level_data[i][j].equals("0")
         if (distance < player.size/2)  {
           if (tile_type.equals("0")) {
-            current_level.create_entities();
+            return true;
+            //current_level.create_entities();
           } else if (TILE_FRICTIONS.keySet().contains(tile_type)) {
             if (TILE_FRICTIONS.get(tile_type) > highest_friction) {
               highest_friction = TILE_FRICTIONS.get(tile_type);
@@ -272,6 +275,8 @@ class Level {
     player.player_friction.c = coeffFriction*highest_friction;
     player.player_friction.c2 = coeffFriction*highest_friction;
     //popMatrix();
+    
+    return false;
   }
   
 }
