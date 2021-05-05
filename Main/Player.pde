@@ -2,15 +2,24 @@ class Player extends Rigid_Body {
     
   Animation animation;
   float size;
+  float baseSize;
   Friction player_friction;
   
   int boostTime;
   int boostCooldown;
   PVector boostDir;
   
-  Player(float x, float y, float m, Friction f, int facing) {
+  boolean inAir;
+  float airTime;
+  PVector jumpDir;  // could use boostDir, but for clarity use a different variable
+  
+  float tile_size;
+  
+  Player(float x, float y, float m, Friction f, int facing, float tile_size) {
     super(x, y, m);
+    this.tile_size = tile_size;
     this.size = displayWidth/PLAYER_SIZE_PROPORTION;
+    this.baseSize = size;
     animation= new Animation("crab", PLAYER_ANIMATION_FRAMES);
     orientation = HALF_PI*facing;
     targetOrientation = orientation;
@@ -19,6 +28,10 @@ class Player extends Rigid_Body {
     boostDir = new PVector();
     boostTime = 0;
     boostCooldown = 0;
+    
+    jumpDir = new PVector();
+    inAir = false;
+    airTime = 0;
   }
   
   float get_target_dir() {
@@ -47,8 +60,16 @@ class Player extends Rigid_Body {
     return orientation;
   }
   
+  void jump() {
+    
+    if (airTime <= 0) {
+      airTime = fps;  // in air for one second
+      jumpDir = new PVector(sin(orientation), -1*cos(orientation));
+    }
+  }
+  
   void boost() {
-    if (boostCooldown <= 0) {
+    if (boostCooldown <= 0 && !inAir) {
       boostTime  = 10;
       boostCooldown = 120;
       
@@ -79,6 +100,23 @@ class Player extends Rigid_Body {
       
       position.x += boostDir.x*(size/4);
       position.y += boostDir.y*(size/4);
+    }
+    
+    if (airTime > 0) {
+      airTime--;
+      inAir = true;
+      if (airTime >= fps/2) {
+        this.size += baseSize*.02;
+      } else {
+        this.size -= baseSize*.02;
+      }
+
+      velocity.x = jumpDir.x*(tile_size/fps);
+      velocity.y = jumpDir.y*(tile_size/fps);
+      
+    } else {
+      inAir = false;
+      size = baseSize;  // jumping should bring size back down anyway, but just in case
     }
     
     pushMatrix();

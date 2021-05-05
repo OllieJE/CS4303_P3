@@ -12,19 +12,21 @@ final int SPIKES_PER_TILE = 5;
 
 final float UI_HEIGHT_PROPORTION = 0.2;
 
-final float FRICTION_PROPORTION = 300000;  // base friction. surface friction is multiplied by this
+final float FRICTION_PROPORTION = 500000;  // base friction. surface friction is multiplied by this
 
 final float PUSH_FORCE_PROPORTION = 32000;
 
 final int fps = 60;  
 float ui_height;
 
+int lives;
 int level;
 
 Player player;
 List<Obstacle> obstacles;
 List<Key> keys;
 List<Gate> gates;
+List<UiElement> ui_elements;
 Goal goal;
 
 final HashMap<String, Float> TILE_FRICTIONS = new HashMap<String, Float>() {{
@@ -57,12 +59,13 @@ void setup() {
   fullScreen();
   frameRate(fps);
   
+  lives = 3;
   ui_height = UI_HEIGHT_PROPORTION*displayHeight;
   //player = new Player(displayWidth/2, displayHeight/2, 0.8);
   
   coeffFriction = displayWidth/FRICTION_PROPORTION;   
   forceRegistry = new ForceRegistry();
-  friction = new Friction(coeffFriction);
+  friction = new Friction(coeffFriction, coeffFriction);
   //forceRegistry.add(player, friction);
   
   level = 1;
@@ -91,11 +94,14 @@ void keyPressed() {
          movingDown = true ;
          movingUp = false;
          break ;
+       
      }
   } else {
     if (key == '1') {
       player.boost();
       
+    } else if (key == '2') {
+      player.jump();
     }
   }
 } 
@@ -238,36 +244,43 @@ void update() {
   
   forceRegistry.updateForces();
   player.integrate();
+  if (!player.inAir) {
   
-  //current_level.handleCollision();
-  current_level.getOverlapping();
-  
-  for (Obstacle o : obstacles) {
-    if (o.collision(player)) {
-      current_level.create_entities();
-    }
-  }
-  
-  for (Key k : keys) {
-    if (k.collision(player)) {
-      for (Gate g : gates) {
-        if (g.colourString.equals(k.colourString)) {
-          g.active = false;
-          
-        }
+    //current_level.getOverlapping();
+      
+    for (Obstacle o : obstacles) {
+      if (o.collision(player)) {
+        player.position.x += player.velocity.x*-1;
+        player.position.y += player.velocity.y*-1;
+        player.velocity.mult(0);
+        player.acceleration.mult(0);
       }
-      k.active = false;
+      //if (o.collision(player)) {
+      //  current_level.create_entities();
+      //}
     }
-  }
-  
-  if (goal.collision(player)) {
-    // TODO: DONT JUST HAVE IT GO TO LEVEL 2 EVERY TIME 
-    current_level = new Level(2);
+    
+    for (Key k : keys) {
+      if (k.collision(player)) {
+        for (Gate g : gates) {
+          if (g.colourString.equals(k.colourString)) {
+            g.active = false;
+            
+          }
+        }
+        k.active = false;
+      }
+    }
+    
+    if (goal.collision(player)) {
+      // TODO: DONT JUST HAVE IT GO TO LEVEL 2 EVERY TIME 
+      current_level = new Level(2);
+    }
   }
 }
 
 void draw() {
-  background(0);
+  background(0, 100, 200);
   update();
   current_level.draw();
   player.draw();

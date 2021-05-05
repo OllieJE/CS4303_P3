@@ -1,21 +1,34 @@
 public class Friction extends ForceGenerator {
   float c;
+  float c2;
   
-  Friction (float c) {
+  Friction (float c, float c2) {
     this.c = c;
+    this.c2 = c2;
   }
   
   public void updateForce(Rigid_Body r) {
     if (r.velocity.mag() != 0.0) {
-      float normal = 1.0f;  // If adding sloped movement, change this 
-      float dragMagnitude = c * normal;
+      PVector force = r.velocity.copy() ;
+    
+      //Calculate the total drag coefficient
+      float dragCoeff = force.mag() ;
+      dragCoeff = c * dragCoeff + c2 * dragCoeff * dragCoeff ;
       
-      PVector friction = r.velocity.copy();
-      friction.normalize();
-      friction.mult(-1);
-      friction.mult(dragMagnitude);
+      //Calculate the final force and apply it
+      force.normalize() ;
+      force.mult(-dragCoeff) ;
+      r.addForce(force) ;
       
-      r.addForce(friction);
+      
+      //float dragMagnitude = c;
+            
+      //PVector friction = r.velocity.copy();
+      //friction.normalize();
+      //friction.mult(-1);
+      //friction.mult(dragMagnitude);
+      
+      //r.addForce(friction);
     }
   }
    

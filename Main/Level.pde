@@ -11,7 +11,13 @@ class Level {
   
   Level(int level_id) {
     this.level_id = level_id;
+    create_ui();
     loadLevel();
+  }
+  
+  void create_ui() {
+    ui_elements = new ArrayList<UiElement>();
+    ui_elements.add(new LifeIndicator(displayWidth/80, displayHeight/100, displayWidth/(PLAYER_SIZE_PROPORTION*1.2)));
   }
   
   void create_entities() {
@@ -29,7 +35,7 @@ class Level {
       switch (entity_data[0]) {
         case "p":
           int facing = Integer.parseInt(entity_data[3]);
-          player = new Player(x_pos+tile_size/2, y_pos+tile_size/2, 0.8, friction, facing);
+          player = new Player(x_pos+tile_size/2, y_pos+tile_size/2, 0.8, friction, facing, tile_size);
           forceRegistry.add(player, friction);
           break;
         case "s":
@@ -149,6 +155,10 @@ class Level {
             stroke(200, 175, 120);
             fill(200, 175, 120);
             break;
+          case "3":
+            stroke(255);
+            fill(255);
+            break;
             
         }
         rect(j*tile_size+horizontalShift, i*tile_size, tile_size, tile_size);
@@ -164,6 +174,10 @@ class Level {
     }
     
     goal.draw();
+    
+    for (UiElement u : ui_elements) {
+      u.draw();
+    }
   }
   
   void getOverlapping() {
@@ -171,10 +185,6 @@ class Level {
     // get tile the center of the player is on, as well as the position of the player's center
     float player_pos_x = player.position.x;
     float player_pos_y = player.position.y;
-    
-    println(player_pos_x);
-    println( current_level.tilesX*tile_size + horizontalShift);
-    println("=============");
     
     int tile_x = int((player_pos_x-horizontalShift)/tile_size);
     int tile_y = int(player_pos_y/tile_size);
@@ -260,6 +270,7 @@ class Level {
       
     }
     player.player_friction.c = coeffFriction*highest_friction;
+    player.player_friction.c2 = coeffFriction*highest_friction;
     //popMatrix();
   }
   

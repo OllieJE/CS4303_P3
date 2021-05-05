@@ -47,7 +47,6 @@ class CircularSaw extends Obstacle {
         waitTime = 0; 
       } else {
         waitTime++;
-        println(waitTime);
       }
       
       return;
