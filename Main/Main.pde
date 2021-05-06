@@ -29,6 +29,8 @@ List<Gate> gates;
 List<UiElement> ui_elements;
 Goal goal;
 
+List<Interactable> interactables;
+
 final HashMap<String, Float> TILE_FRICTIONS = new HashMap<String, Float>() {{
     put("1", 1.0);
     put("2", 7.0);
@@ -254,30 +256,36 @@ void update() {
     if (current_level.getOverlapping()) {
       loseLife();
     }
-      
-    for (Obstacle o : obstacles) {
-      //if (o.collision(player)) {
-      //  player.position.x += player.velocity.x*-1;
-      //  player.position.y += player.velocity.y*-1;
-      //  player.velocity.mult(0);
-      //  player.acceleration.mult(0);
-      //}
-      if (o.collision(player)) {
-        loseLife();
-      }
-    }
     
-    for (Key k : keys) {
-      if (k.collision(player)) {
-        for (Gate g : gates) {
-          if (g.colourString.equals(k.colourString)) {
-            g.active = false;
-            
-          }
-        }
-        k.active = false;
+    for (Interactable i : interactables) {
+      if (i.collision(player)) {
+        i.onCollision();
       }
     }
+      
+    //for (Obstacle o : obstacles) {
+    //  //if (o.collision(player)) {
+    //  //  player.position.x += player.velocity.x*-1;
+    //  //  player.position.y += player.velocity.y*-1;
+    //  //  player.velocity.mult(0);
+    //  //  player.acceleration.mult(0);
+    //  //}
+    //  if (o.collision(player)) {
+    //    loseLife();
+    //  }
+    //}
+    
+    //for (Key k : keys) {
+    //  if (k.collision(player)) {
+    //    for (Gate g : gates) {
+    //      if (g.colourString.equals(k.colourString)) {
+    //        g.active = false;
+            
+    //      }
+    //    }
+    //    k.active = false;
+    //  }
+    //}
     
     if (goal.collision(player)) {
       // TODO: DONT JUST HAVE IT GO TO LEVEL 2 EVERY TIME 

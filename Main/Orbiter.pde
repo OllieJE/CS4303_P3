@@ -1,4 +1,4 @@
-class Orbiter extends Obstacle {
+class Orbiter extends Interactable {
   float radius;
   float dir;
   float weight;
@@ -6,8 +6,8 @@ class Orbiter extends Obstacle {
   float tile_size;
   float radians_per_frame;
   
-  Orbiter(float x, float y, float radius, float init_dir, float weight, float speed, Boolean centred, float tile_size) {
-    super(x, y);
+  Orbiter(float x, float y, Level level, float radius, float init_dir, float weight, float speed, Boolean centred, float tile_size) {
+    super(x, y, level);
     this.tile_size = tile_size;
     this.radius = radius*tile_size;
     this.dir = radians(init_dir);
@@ -37,6 +37,10 @@ class Orbiter extends Obstacle {
       dir = 0;
     }
     
+  }
+  
+  void onCollision() {
+    loseLife();
   }
   
   Boolean collision (Player p) {

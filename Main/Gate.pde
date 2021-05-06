@@ -1,4 +1,4 @@
-class Gate extends Obstacle {
+class Gate extends Interactable {
   color colour;
   String colourString;
   int edge;
@@ -6,8 +6,8 @@ class Gate extends Obstacle {
   PVector startPoint;
   PVector endPoint;
   
-  Gate(float x, float y, String colour, int edge, float tile_size) {
-    super(x, y);
+  Gate(float x, float y, Level level, String colour, int edge, float tile_size) {
+    super(x, y, level);
     int[] colourRGB = COLOURS.get(colour);
     colourString = colour;
     this.colour = color(colourRGB[0], colourRGB[1], colourRGB[2]);
@@ -31,6 +31,13 @@ class Gate extends Obstacle {
        
        popMatrix();
     }
+  }
+  
+  void onCollision() {
+    player.position.x += player.velocity.x*-1;
+    player.position.y += player.velocity.y*-1;
+    player.velocity.mult(0);
+    player.acceleration.mult(0);
   }
   
   Boolean collision (Player p) {

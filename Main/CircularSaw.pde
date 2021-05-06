@@ -1,4 +1,4 @@
-class CircularSaw extends Obstacle {
+class CircularSaw extends Interactable {
   PVector target;
   
   PVector start;
@@ -12,8 +12,8 @@ class CircularSaw extends Obstacle {
   PImage img;
   float waitTime;
   
-  CircularSaw(float x, float y, float dx, float dy, float size, float speed, float delay, boolean centred, float tile_size) {
-    super(x, y);
+  CircularSaw(float x, float y, Level level, float dx, float dy, float size, float speed, float delay, boolean centred, float tile_size) {
+    super(x, y, level);
     this.size = tile_size*size;
     this.delay = delay*fps;
     this.waitTime = 0;
@@ -27,6 +27,10 @@ class CircularSaw extends Obstacle {
     end = target.copy();
     
     img = loadImage("images/saw/saw0001.png");
+  }
+  
+  void onCollision() {
+    loseLife();
   }
   
   Boolean collision(Player p) {

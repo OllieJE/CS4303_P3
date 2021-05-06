@@ -1,4 +1,4 @@
-class Spikes extends Obstacle {
+class Spikes extends Interactable {
   
   int state;  
   int max_state = 5;
@@ -10,8 +10,8 @@ class Spikes extends Obstacle {
   Boolean active;
   int timer;
   
-  Spikes(float x, float y, float tile_size, float seconds_alive, float seconds_delay) {
-    super(x, y);
+  Spikes(float x, float y, Level level, float tile_size, float seconds_alive, float seconds_delay) {
+    super(x, y, level);
     this.size = tile_size/(SPIKES_PER_TILE*2.2);  
     this.increment = tile_size/(SPIKES_PER_TILE+1);  // how many "gaps" there are between each layer of spikes and the edges of the tile
     time_alive = fps*seconds_alive;
@@ -70,6 +70,10 @@ class Spikes extends Obstacle {
     //if (state == 0) {going_up = true;};
     //if (state == max_state) {going_up = false;};
     ////state = (state+1)%max_state;
+  }
+  
+  void onCollision() {
+    loseLife();
   }
   
   Boolean collision(Player p) {

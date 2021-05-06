@@ -26,6 +26,8 @@ class Level {
     keys = new ArrayList<Key>();
     gates = new ArrayList<Gate>();
     
+    interactables = new ArrayList<Interactable>();
+    
     for (String s : entity_data_list) {
       String[] entity_data = s.split(",");
       
@@ -41,7 +43,7 @@ class Level {
         case "s":
           float seconds_alive = Float.parseFloat(entity_data[3]);
           float seconds_delay = Float.parseFloat(entity_data[4]);
-          obstacles.add(new Spikes(x_pos, y_pos, tile_size, seconds_alive, seconds_delay));
+          interactables.add(new Spikes(x_pos, y_pos, this, tile_size, seconds_alive, seconds_delay));
           break;
         case "o":
           float radius = Float.parseFloat(entity_data[3]);
@@ -49,7 +51,7 @@ class Level {
           float weight = Float.parseFloat(entity_data[5]);
           float speed = Float.parseFloat(entity_data[6]);
           Boolean centred = entity_data[7].equals("1");
-          obstacles.add(new Orbiter(x_pos, y_pos, radius, init_dir, weight, speed, centred, tile_size));
+          interactables.add(new Orbiter(x_pos, y_pos, this, radius, init_dir, weight, speed, centred, tile_size));
           break;
         case "c":
           int dx = Integer.parseInt(entity_data[3]);
@@ -58,18 +60,18 @@ class Level {
           speed = Float.parseFloat(entity_data[6]);
           float delay = Float.parseFloat(entity_data[7]);
           centred = entity_data[8].equals("1");
-          obstacles.add(new CircularSaw(x_pos, y_pos, tile_size*dx+horizontalShift, tile_size*dy, size, speed, delay, centred, tile_size));
+          interactables.add(new CircularSaw(x_pos, y_pos, this, tile_size*dx+horizontalShift, tile_size*dy, size, speed, delay, centred, tile_size));
           break;
         case "G":
           String colourString = entity_data[3];
           int edge = Integer.parseInt(entity_data[4]);
-          Gate g = new Gate(x_pos, y_pos, colourString, edge, tile_size);
-          obstacles.add(g);
+          Gate g = new Gate(x_pos, y_pos, this, colourString, edge, tile_size);
+          interactables.add(g);
           gates.add(g);
           break;
         case "k":
           colourString = entity_data[3];
-          keys.add(new Key(x_pos, y_pos, colourString, tile_size));
+          interactables.add(new Key(x_pos, y_pos, this, colourString, tile_size));
           break;
         case "g":
           goal = new Goal(x_pos, y_pos, tile_size);
@@ -165,12 +167,16 @@ class Level {
       }
     }
     
-    for (Obstacle o : obstacles) {
-      o.draw();
-    }
+    //for (Obstacle o : obstacles) {
+    //  o.draw();
+    //}
     
-    for (Key k : keys) {
-      k.draw();
+    //for (Key k : keys) {
+    //  k.draw();
+    //}
+    
+    for (Interactable i : interactables) {
+      i.draw();
     }
     
     goal.draw();
