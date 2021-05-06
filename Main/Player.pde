@@ -84,16 +84,7 @@ class Player extends Rigid_Body {
     }
   }
   
-  void draw() {
-    
-    boolean button_pressed = movingLeft || movingRight || movingUp || movingDown;
-        
-    stroke(150, 50, 50);
-    fill(150, 50, 50);
-    //circle(position.x, position.y, size);
-    //image(animation.images[animation.frame], position.x, position.y);
-    
-    
+  void useAbilities() {
     if (boostCooldown > 0) {
       boostCooldown--;
     }
@@ -125,6 +116,19 @@ class Player extends Rigid_Body {
       inAir = false;
       size = baseSize;  // jumping should bring size back down anyway, but just in case
     }
+  }
+  
+  void draw() {
+    
+    boolean button_pressed = movingLeft || movingRight || movingUp || movingDown;
+        
+    stroke(150, 50, 50);
+    fill(150, 50, 50);
+    //circle(position.x, position.y, size);
+    //image(animation.images[animation.frame], position.x, position.y);
+    
+    
+    useAbilities();
     
     pushMatrix();
     translate(position.x, position.y);

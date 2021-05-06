@@ -20,6 +20,21 @@ class Level {
     ui_elements.add(new LifeIndicator(displayWidth/80, displayHeight/100, displayWidth/(PLAYER_SIZE_PROPORTION*1.2)));
   }
   
+  
+  void changeTile(int x, int y, String newTile) {
+    level_data[y][x] = newTile;
+  }
+  
+  int[] getPlayerTilePos() {
+    int[] playerPos = new int[2];
+    
+    playerPos[0] = (int) ((player.position.x - horizontalShift)/tile_size);
+    playerPos[1] = (int) ((player.position.y)/tile_size);
+    
+    return playerPos;
+  }
+  
+  
   void create_entities() {
     
     obstacles = new ArrayList<Obstacle>();
