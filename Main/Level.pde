@@ -76,6 +76,9 @@ class Level {
         case "g":
           goal = new Goal(x_pos, y_pos, tile_size);
           break;
+        case "j":
+          interactables.add(new Springpad(x_pos, y_pos, this, tile_size));
+          break;
       }
     }
 

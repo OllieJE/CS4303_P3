@@ -45,6 +45,10 @@ Circular saw things (think PoE labyrinths)
 	- speed is given in tiles/second
 
 
+Jump-pad
+"j", pos_x, pos_y
+
+
 EXTRA SHIT:
 - slowly rotate the whole map lul
 

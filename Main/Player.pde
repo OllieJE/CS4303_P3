@@ -15,6 +15,9 @@ class Player extends Rigid_Body {
   
   float tile_size;
   
+  float jumpTime;
+  float jumpDistance;
+  
   Player(float x, float y, float m, Friction f, int facing, float tile_size) {
     super(x, y, m);
     this.tile_size = tile_size;
@@ -32,6 +35,9 @@ class Player extends Rigid_Body {
     jumpDir = new PVector();
     inAir = false;
     airTime = 0;
+    
+    jumpTime = fps*1.5;
+    jumpDistance = tile_size*2.1;  // jump a little over two tiles
   }
   
   float get_target_dir() {
@@ -63,7 +69,7 @@ class Player extends Rigid_Body {
   void jump() {
     
     if (airTime <= 0) {
-      airTime = fps;  // in air for one second
+      airTime = jumpTime;  // time in air
       jumpDir = new PVector(sin(orientation), -1*cos(orientation));
     }
   }
@@ -105,15 +111,15 @@ class Player extends Rigid_Body {
     if (airTime > 0) {
       airTime--;
       inAir = true;
-      if (airTime >= fps/2) {
+      if (airTime >= jumpTime/2) {
         this.size += baseSize*.02;
       } else {
         this.size -= baseSize*.02;
       }
 
       // jump over a bit more than a tile's length
-      velocity.x = jumpDir.x*((tile_size*1.2)/fps);
-      velocity.y = jumpDir.y*((tile_size*1.2)/fps);
+      velocity.x = jumpDir.x*(jumpDistance/jumpTime);
+      velocity.y = jumpDir.y*(jumpDistance/jumpTime);
       
     } else {
       inAir = false;
