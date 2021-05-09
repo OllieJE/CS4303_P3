@@ -14,7 +14,7 @@ class Springpad extends Interactable {
     circle(position.x, position.y, size);
   }
   
-  void onCollision() {
+  void onCollision(Player p) {
     player.jump();
   }
   

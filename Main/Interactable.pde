@@ -9,7 +9,7 @@ abstract class Interactable {
       this.level = level;
   }
   
-  abstract void onCollision();
+  abstract void onCollision(Player p);
   
   abstract Boolean collision(Player p);
   

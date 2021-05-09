@@ -49,6 +49,10 @@ Jump-pad
 "j", pos_x, pos_y
 
 
+Collider
+"C", pos_x, pos_y, size, centred
+
+
 EXTRA SHIT:
 - slowly rotate the whole map lul
 

@@ -33,6 +33,7 @@ List<UiElement> ui_elements;
 Goal goal;
 
 List<Interactable> interactables;
+ArrayList<Contact> contacts;
 
 final HashMap<String, Float> TILE_FRICTIONS = new HashMap<String, Float>() {{
     put("1", 1.0);
@@ -59,7 +60,7 @@ Friction friction;
 
 Level current_level;
 MainMenu mainMenu;
-
+ContactResolver contactResolver ;
 
 void setup() {
   fullScreen();
@@ -224,14 +225,18 @@ void update() {
     
     for (Interactable i : interactables) {
       if (i.collision(player)) {
-        i.onCollision();
+        i.onCollision(player);
       }
     }
+    
+    contactResolver.resolveContacts(contacts) ;  
     
     if (goal.collision(player)) {
       // TODO: DONT JUST HAVE IT GO TO LEVEL 2 EVERY TIME 
       nextLevel();
     }
+    
+    contacts.clear() ;
   }
 }
 

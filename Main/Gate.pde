@@ -33,11 +33,11 @@ class Gate extends Interactable {
     }
   }
   
-  void onCollision() {
-    player.position.x += player.velocity.x*-1;
-    player.position.y += player.velocity.y*-1;
-    player.velocity.mult(0);
-    player.acceleration.mult(0);
+  void onCollision(Player p) {
+    p.position.x += p.velocity.x*-1;
+    p.position.y += p.velocity.y*-1;
+    p.velocity.mult(0);
+    p.acceleration.mult(0);
   }
   
   Boolean collision (Player p) {
@@ -49,8 +49,8 @@ class Gate extends Interactable {
     float p1_x = position.x+startPoint.x;
     float p1_y = position.y+startPoint.y;
     
-    float dist_x = player.position.x - position.x;
-    float dist_y = player.position.y - position.y;
+    float dist_x = p.position.x - position.x;
+    float dist_y = p.position.y - position.y;
     float distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
     
     if (distance <= player.size) {
@@ -60,16 +60,16 @@ class Gate extends Interactable {
     float p2_x = position.x + endPoint.x;
     float p2_y = position.y + endPoint.y;
     
-    dist_x = player.position.x - p2_x;
-    dist_y = player.position.y - p2_y;
+    dist_x = p.position.x - p2_x;
+    dist_y = p.position.y - p2_y;
     distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
     
-    if (distance <= player.size) {
+    if (distance <= p.size) {
       return true;
     }
     
     // get closest point on unbounded line
-    float dot = ( ((player.position.x-p1_x)*(p2_x-p1_x)) + ((player.position.y-p1_y)*(p2_y-p1_y)) ) / pow(gateLength,2);
+    float dot = ( ((p.position.x-p1_x)*(p2_x-p1_x)) + ((p.position.y-p1_y)*(p2_y-p1_y)) ) / pow(gateLength,2);
     float closestX = p1_x + (dot * (p2_x-p1_x));
     float closestY = p1_y + (dot * (p2_y-p1_y));
     
@@ -78,10 +78,10 @@ class Gate extends Interactable {
     float p2_dist = dist(closestX, closestY, p2_x, p2_y);
     
     if (p1_dist+p2_dist >= gateLength && p1_dist+p2_dist <= gateLength) {
-      dist_x = closestX - player.position.x;
-      dist_y = closestY - player.position.y;
+      dist_x = closestX - p.position.x;
+      dist_y = closestY - p.position.y;
       distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
-      if (distance <= player.size) {  
+      if (distance <= p.size) {  
         return true;
       }
       

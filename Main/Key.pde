@@ -12,7 +12,7 @@ class Key extends Interactable {
     active = true;
   }
   
-  void onCollision() {
+  void onCollision(Player p) {
     for (Gate g : gates) {
         if (g.colourString.equals(colourString)) {
           g.active = false;

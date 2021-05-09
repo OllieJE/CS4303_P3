@@ -39,7 +39,7 @@ class Orbiter extends Interactable {
     
   }
   
-  void onCollision() {
+  void onCollision(Player p) {
     loseLife();
   }
   
@@ -49,27 +49,27 @@ class Orbiter extends Interactable {
     float p1_x = position.x;
     float p1_y = position.y;
     
-    float dist_x = player.position.x - position.x;
-    float dist_y = player.position.y - position.y;
+    float dist_x = p.position.x - position.x;
+    float dist_y = p.position.y - position.y;
     float distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
     
-    if (distance <= player.size) {
+    if (distance <= p.size) {
       return true;
     }
     
     float p2_x = position.x + radius*cos(dir+HALF_PI);
     float p2_y = position.y + radius*sin(dir+HALF_PI);
     
-    dist_x = player.position.x - p2_x;
-    dist_y = player.position.y - p2_y;
+    dist_x = p.position.x - p2_x;
+    dist_y = p.position.y - p2_y;
     distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
     
-    if (distance <= player.size) {
+    if (distance <= p.size) {
       return true;
     }
     
     // get closest point on unbounded line
-    float dot = ( ((player.position.x-p1_x)*(p2_x-p1_x)) + ((player.position.y-p1_y)*(p2_y-p1_y)) ) / pow(radius,2);
+    float dot = ( ((p.position.x-p1_x)*(p2_x-p1_x)) + ((p.position.y-p1_y)*(p2_y-p1_y)) ) / pow(radius,2);
     float closestX = p1_x + (dot * (p2_x-p1_x));
     float closestY = p1_y + (dot * (p2_y-p1_y));
     
@@ -81,7 +81,7 @@ class Orbiter extends Interactable {
       dist_x = closestX - player.position.x;
       dist_y = closestY - player.position.y;
       distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
-      if (distance <= player.size) {  
+      if (distance <= p.size) {  
         return true;
       }
       

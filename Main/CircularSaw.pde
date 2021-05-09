@@ -29,12 +29,12 @@ class CircularSaw extends Interactable {
     img = loadImage("images/saw/saw0001.png");
   }
   
-  void onCollision() {
+  void onCollision(Player p) {
     loseLife();
   }
   
   Boolean collision(Player p) {
-    return position.dist(p.position) <= size/2+player.size/2;
+    return position.dist(player.position) <= size/2+player.size/2;
   }
   
   void move() {

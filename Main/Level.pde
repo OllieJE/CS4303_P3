@@ -94,12 +94,20 @@ class Level {
         case "j":
           interactables.add(new Springpad(x_pos, y_pos, this, tile_size));
           break;
+        case "C":
+          size = Float.parseFloat(entity_data[3]);
+          centred = entity_data[4].equals("1");
+          interactables.add(new Collider(x_pos, y_pos, this,size, centred));
+          break;
       }
     }
 
   }
   
   void loadLevel() {
+    contacts = new ArrayList<Contact>();
+    contactResolver = new ContactResolver();
+    
     String level_name = "levels/level_" + Integer.toString(level_id) + ".txt";
     String[] level_string_data = loadStrings(level_name);
     
@@ -118,43 +126,10 @@ class Level {
     for (int i = 0; i < level_string_data.length; i++) {
       level_data[i] = (level_string_data[i].split(""));
     }
-    
-    
-    //entity_data = new String[tiles][tiles];
-    
-    //for (int i = 0; i < entity_string_data.length; i++) {
-    //  entity_data[i] = (entity_string_data[i].split(""));
-    //}
-    
+
     create_entities();
     
   }
-  
-  //void handleCollision() {
-  //  getOverlapping();
-  
-  //  for (Obstacle o : obstacles) {
-  //    if (o.collision(player)) {
-  //      current_level.create_entities();
-  //    }
-  //  }
-    
-  //  for (Key k : keys) {
-  //    if (k.collision(player)) {
-  //      for (Gate g : gates) {
-  //        if (g.colourString.equals(k.colourString)) {
-  //          g.active = false;
-            
-  //        }
-  //      }
-  //      k.active = false;
-  //    }
-  //  }
-    
-  //  if (goal.collision(player)) {
-      
-  //  }
-  //}
   
   void draw() {
     strokeWeight(1);
