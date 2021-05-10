@@ -7,7 +7,11 @@ class Player extends Rigid_Body {
   
   int boostTime;
   int boostCooldown;
+  int boostCooldownMax = fps*2;
   PVector boostDir;
+  
+  int sandCooldown;
+  int sandCooldownMax = fps*5;
   
   boolean inAir;
   float airTime;
@@ -66,6 +70,14 @@ class Player extends Rigid_Body {
     return orientation;
   }
   
+  void useSand() {
+    if (sandCooldown <= 0 && !inAir) {
+      int[] playerPos = current_level.getPlayerTilePos();
+      current_level.changeTile(playerPos[0], playerPos[1], "2");
+      sandCooldown = sandCooldownMax;
+    }
+  }
+  
   void jump() {
     
     if (airTime <= 0) {
@@ -77,7 +89,7 @@ class Player extends Rigid_Body {
   void boost() {
     if (boostCooldown <= 0 && !inAir) {
       boostTime  = 10;
-      boostCooldown = 120;
+      boostCooldown = boostCooldownMax;
       
       boostDir = new PVector(sin(orientation), -1*cos(orientation));
       boostDir.normalize();
@@ -87,6 +99,10 @@ class Player extends Rigid_Body {
   void useAbilities() {
     if (boostCooldown > 0) {
       boostCooldown--;
+    }
+    
+    if (sandCooldown > 0) {
+      sandCooldown--;
     }
     
     if (boostTime > 0) {

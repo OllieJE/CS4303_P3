@@ -150,8 +150,9 @@ void keyPressed() {
           player.boost();
           break;
         case '2':
-          int[] playerPos = current_level.getPlayerTilePos();
-          current_level.changeTile(playerPos[0], playerPos[1], "2");
+          player.useSand();
+          //int[] playerPos = current_level.getPlayerTilePos();
+          //current_level.changeTile(playerPos[0], playerPos[1], "2");
       }
       
     }
