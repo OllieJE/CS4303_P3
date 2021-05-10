@@ -10,9 +10,9 @@ final float ENEMY_INIT_X_PROPORTION = 1;
 
 final int SPIKES_PER_TILE = 5;  
 
-final float UI_HEIGHT_PROPORTION = 0.2;
+final float UI_HEIGHT_PROPORTION = 0.1;
 
-final float FRICTION_PROPORTION = 600000;  // base friction. surface friction is multiplied by this
+final float FRICTION_PROPORTION = 700000;  // base friction. surface friction is multiplied by this
 
 final float PUSH_FORCE_PROPORTION = 32000;
 
@@ -59,8 +59,10 @@ ForceRegistry forceRegistry;
 Friction friction;
 
 Level current_level;
+LevelEditor levelEditor;
 MainMenu mainMenu;
 ContactResolver contactResolver ;
+UI ui;
 
 void setup() {
   fullScreen();
@@ -116,6 +118,7 @@ void loadGame() {
 void startNewGame() {
   level = 1;
   current_level = new Level(1);
+  
 }
 
 void keyPressed() {
@@ -165,6 +168,29 @@ void keyPressed() {
       case '3':
         exit();
         break;
+      case '4':
+        levelEditor = new LevelEditor();
+        screen = 2;
+        break;
+    }
+  } else if (screen == 2) {
+    if (key == CODED) {
+       switch (keyCode) {
+         case LEFT :
+           levelEditor.removeColumn();
+           break ;
+         case RIGHT :
+           levelEditor.addColumn();
+           break ;
+           
+         case UP :
+           levelEditor.removeRow();
+           break ;
+         case DOWN :
+           levelEditor.addRow();
+           break ;
+         
+       }
     }
   }
 } 
@@ -249,6 +275,10 @@ void draw() {
     update();
     current_level.draw();
     player.draw();
+    ui.draw();
+  } else if (screen == 2) {
+    background(0);
+    levelEditor.draw();
   }
   
   

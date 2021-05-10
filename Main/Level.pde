@@ -11,13 +11,15 @@ class Level {
   
   Level(int level_id) {
     this.level_id = level_id;
-    create_ui();
     loadLevel();
+    create_ui();
   }
   
   void create_ui() {
     ui_elements = new ArrayList<UiElement>();
     ui_elements.add(new LifeIndicator(displayWidth/80, displayHeight/100, displayWidth/(PLAYER_SIZE_PROPORTION*1.2)));
+    
+    ui = new UI(horizontalShift, tile_size*tilesX);
   }
   
   
@@ -159,14 +161,6 @@ class Level {
         rect(j*tile_size+horizontalShift, i*tile_size, tile_size, tile_size);
       }
     }
-    
-    //for (Obstacle o : obstacles) {
-    //  o.draw();
-    //}
-    
-    //for (Key k : keys) {
-    //  k.draw();
-    //}
     
     for (Interactable i : interactables) {
       i.draw();
