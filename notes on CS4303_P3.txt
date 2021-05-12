@@ -101,3 +101,7 @@ abilities:
 
 
 originally I wanted to have the UI class work for both the game and level editor screens but the level editor requires dynamic updating of the parameters, leading to redundant parameters (e.g. which tile is selected) so I just put it in levelEditor
+
+
+
+dark blue, light blue, sand, white, player, saw, gate/key, orbiter, jump-pad, spikes, collider

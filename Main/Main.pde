@@ -18,6 +18,8 @@ final float PUSH_FORCE_PROPORTION = 32000;
 
 final int TEXT_SIZE_PROPORTION = 60;
 
+final int TILE_TYPES = 10;  // count of all tile types excluding the player (tiles includes floor and entity types)
+
 int text_size;
 
 final int fps = 60;  
@@ -48,7 +50,7 @@ final HashMap<String, int[]> COLOURS = new HashMap<String, int[]>() {{
     put("yellow", new int[]{200, 175, 120});
     put("white", new int[]{255, 255, 255});
     put("red", new int[]{255, 0, 0});
-    put("red", new int[]{0, 0, 0});
+    put("black", new int[]{0, 0, 0});
     put("grey", new int[]{100, 100, 100});
 }};
 

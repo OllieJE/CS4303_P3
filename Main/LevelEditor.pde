@@ -9,7 +9,7 @@ class LevelEditor {
   int activeTile;
   
   LevelEditor() {
-    activeTile = 0;
+    activeTile = 1;
     rowCount = 0;
     columnCount = 0;
     levelData = new ArrayList<ArrayList<String>>();
@@ -28,6 +28,9 @@ class LevelEditor {
       String newTile;
       switch (activeTile) {
         case 0:
+          newTile = "0";
+          break;
+        case 1:
           newTile = "1";
           break;
         default:
@@ -40,9 +43,9 @@ class LevelEditor {
   int[] getTilePos(float x, float y) {
     int[] tilePos = new int[2];
     
-    tilePos[0] = (int) ((x - horizontalShift)/tile_size);
-    tilePos[1] = (int) ((y)/tile_size);
-    
+    // ternary operators are there as java rounds -1 < x < 0 to 0
+    tilePos[0] = (int) (((x - horizontalShift)/tile_size) >= 0 ? (x - horizontalShift)/tile_size : -100);
+    tilePos[1] = (int) ((y)/tile_size >= 0 ? y/tile_size : -100);
     return tilePos;
   }
   
@@ -122,7 +125,7 @@ class LevelEditor {
       columnCount--;
       
       for (int i = 0; i < rowCount; i++) {
-        levelData.get(i).remove(levelData.get(0).size()-1);
+        levelData.get(i).remove(levelData.get(i).size()-1);
       }
       updateTileSize();
     }
@@ -165,15 +168,25 @@ class LevelEditor {
     fill(0);
     rect(0, 0, displayWidth, ui_height);
     
-    int[] colorRGB = COLOURS.get("darkblue");
-    fill(colorRGB[0], colorRGB[1], colorRGB[2]);
-    stroke(colorRGB[0], colorRGB[1], colorRGB[2]);
-    rect(0, 0, ui_height, ui_height);
+    // draw the UI
+    String[] tiles = new String[]{"darkblue", "lightblue", "white", "yellow"};
+    int offset = 0;
+    int[] colorRGB;
     
-    colorRGB = COLOURS.get("lightblue");
-    fill(colorRGB[0], colorRGB[1], colorRGB[2]);
-    stroke(colorRGB[0], colorRGB[1], colorRGB[2]);
-    rect(0, 0, ui_height, ui_height);
+    strokeWeight(3);
+    for (String t : tiles) {
+      if (activeTile == offset) {
+        colorRGB = COLOURS.get("red");
+      } else {
+        colorRGB = COLOURS.get("grey");
+      }
+      stroke(colorRGB[0], colorRGB[1], colorRGB[2]);
+      colorRGB = COLOURS.get(t);
+      fill(colorRGB[0], colorRGB[1], colorRGB[2]);
+      //stroke(colorRGB[0], colorRGB[1], colorRGB[2]);
+      rect(offset*(displayWidth/TILE_TYPES), 0, ui_height, ui_height);  // i*ui_height because there just happens to be 10 placeable tiles and ui_height is 
+      offset++;
+    }
     
     popMatrix();
   }
