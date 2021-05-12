@@ -17,6 +17,7 @@ final float FRICTION_PROPORTION = 700000;  // base friction. surface friction is
 final float PUSH_FORCE_PROPORTION = 32000;
 
 final int TEXT_SIZE_PROPORTION = 60;
+
 int text_size;
 
 final int fps = 60;  
@@ -41,7 +42,14 @@ final HashMap<String, Float> TILE_FRICTIONS = new HashMap<String, Float>() {{
 }};
 
 final HashMap<String, int[]> COLOURS = new HashMap<String, int[]>() {{
-    put("o", new int[]{255, 160, 0});
+    put("orange", new int[]{255, 160, 0});
+    put("lightblue", new int[]{30, 203, 225});
+    put("darkblue", new int[]{0, 100, 200});
+    put("yellow", new int[]{200, 175, 120});
+    put("white", new int[]{255, 255, 255});
+    put("red", new int[]{255, 0, 0});
+    put("red", new int[]{0, 0, 0});
+    put("grey", new int[]{100, 100, 100});
 }};
 
 float coeffFriction;
@@ -228,7 +236,19 @@ void loseLife() {
   current_level.loadLevel();
 }
 
+
+void updateEditor() {
+
+  if (mousePressed) {
+    
+    int[] xy = levelEditor.getTilePos(mouseX, mouseY);
+    levelEditor.changeTile(xy[0], xy[1]);
+  }
+}
+
+
 void update() {
+  
   if (movingLeft) { 
     player.addForce(new PVector(displayWidth/PUSH_FORCE_PROPORTION*-1, 0)) ;
   }
@@ -265,6 +285,7 @@ void update() {
     
     contacts.clear() ;
   }
+ 
 }
 
 void draw() {
@@ -279,6 +300,7 @@ void draw() {
     ui.draw();
   } else if (screen == 2) {
     background(0);
+    updateEditor();
     levelEditor.draw();
   }
   

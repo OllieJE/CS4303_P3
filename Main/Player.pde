@@ -72,7 +72,7 @@ class Player extends Rigid_Body {
   
   void useSand() {
     if (sandCooldown <= 0 && !inAir) {
-      int[] playerPos = current_level.getPlayerTilePos();
+      int[] playerPos = current_level.getTilePos(player.position.x, player.position.y);
       current_level.changeTile(playerPos[0], playerPos[1], "2");
       sandCooldown = sandCooldownMax;
     }

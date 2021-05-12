@@ -17,7 +17,7 @@ class UI {
   }
   
   void draw() {
-    if (screen == 1) {
+    if (screen == 1) {  // regular game screen
       fill(0);
       strokeWeight(1);
       stroke(0);
@@ -49,6 +49,6 @@ class UI {
       rect(ui_height, 0, ui_height, ui_height);
       
       popMatrix();
-    }
+    } 
   }
 }

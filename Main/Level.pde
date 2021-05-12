@@ -27,13 +27,13 @@ class Level {
     level_data[y][x] = newTile;
   }
   
-  int[] getPlayerTilePos() {
-    int[] playerPos = new int[2];
+  int[] getTilePos(float x, float y) {
+    int[] tilePos = new int[2];
     
-    playerPos[0] = (int) ((player.position.x - horizontalShift)/tile_size);
-    playerPos[1] = (int) ((player.position.y)/tile_size);
+    tilePos[0] = (int) ((x - horizontalShift)/tile_size);
+    tilePos[1] = (int) ((y)/tile_size);
     
-    return playerPos;
+    return tilePos;
   }
   
   
@@ -136,28 +136,29 @@ class Level {
   void draw() {
     strokeWeight(1);
     fill(0);
+    int[] colorRGB;
     
     for (int i = 0; i < tilesY; i++) {
       for (int j = 0; j < tilesX; j++) {
         switch(level_data[i][j]){
           case "0":
-            stroke(0, 100, 200);
-            fill(0, 100, 200);
+            colorRGB = COLOURS.get("darkblue");
             break;
           case "1":
-            stroke(30, 203, 225);
-            fill(30, 203, 225);
+            colorRGB = COLOURS.get("lightblue");
             break;
           case "2":
-            stroke(200, 175, 120);
-            fill(200, 175, 120);
+            colorRGB = COLOURS.get("yellow");
             break;
           case "3":
-            stroke(255);
-            fill(255);
+            colorRGB = COLOURS.get("white");
             break;
+          default:
+            colorRGB = COLOURS.get("black");  // if it's black then there's been an error
             
         }
+        stroke(colorRGB[0], colorRGB[1], colorRGB[2]);
+        fill(colorRGB[0], colorRGB[1], colorRGB[2]);
         rect(j*tile_size+horizontalShift, i*tile_size, tile_size, tile_size);
       }
     }
