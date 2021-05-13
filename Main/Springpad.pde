@@ -1,8 +1,8 @@
 class Springpad extends Interactable {
   float size;
   
-  Springpad(float x, float y, Level level, float tile_size) {
-    super(x+tile_size/2, y+tile_size/2, level);
+  Springpad(float x, float y, float tile_size) {
+    super(x+tile_size/2, y+tile_size/2);
     size = tile_size/2;
   }
   

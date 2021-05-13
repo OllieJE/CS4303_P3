@@ -1,12 +1,10 @@
 abstract class Interactable {
   PVector position;
   boolean active;
-  Level level;
   
-  Interactable(float x, float y, Level level) {
+  Interactable(float x, float y) {
       position = new PVector(x, y);
       active = true;
-      this.level = level;
   }
   
   abstract void onCollision(Player p);

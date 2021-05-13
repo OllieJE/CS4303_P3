@@ -18,7 +18,9 @@ final float PUSH_FORCE_PROPORTION = 32000;
 
 final int TEXT_SIZE_PROPORTION = 60;
 
-final int TILE_TYPES = 10;  // count of all tile types excluding the player (tiles includes floor and entity types)
+final int TILE_TYPES = 11;  // count of all tile types excluding the player (tiles includes floor and entity types)
+// note that this can't go too high or the level editor UI will die
+// this is an issue on lower-res computers
 
 int text_size;
 
@@ -242,9 +244,9 @@ void loseLife() {
 void updateEditor() {
 
   if (mousePressed) {
-    
-    int[] xy = levelEditor.getTilePos(mouseX, mouseY);
-    levelEditor.changeTile(xy[0], xy[1]);
+    levelEditor.handleClick(mouseX, mouseY);
+    //int[] xy = levelEditor.getTilePos(mouseX, mouseY);
+    //levelEditor.changeTile(xy[0], xy[1]);
   }
 }
 

@@ -12,8 +12,8 @@ class CircularSaw extends Interactable {
   PImage img;
   float waitTime;
   
-  CircularSaw(float x, float y, Level level, float dx, float dy, float size, float speed, float delay, boolean centred, float tile_size) {
-    super(x, y, level);
+  CircularSaw(float x, float y, float dx, float dy, float size, float speed, float delay, boolean centred, float tile_size) {
+    super(x, y);
     this.size = tile_size*size;
     this.delay = delay*fps;
     this.waitTime = 0;

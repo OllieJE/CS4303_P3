@@ -2,12 +2,12 @@ class Collider extends Interactable {
   float size;
   float centred;
   
-  Collider(float x, float y, Level level, float size, boolean centred) {
-    super(x, y, level);
+  Collider(float x, float y, float size, boolean centred, float tile_size) {
+    super(x, y);
     this.centred = centred ? 0.5 : 0;
-    this.size = size*level.tile_size;
-    this.position.x += level.tile_size*this.centred;
-    this.position.y += level.tile_size*this.centred;
+    this.size = size*tile_size;
+    this.position.x += tile_size*this.centred;
+    this.position.y += tile_size*this.centred;
   }
   
   void draw() {

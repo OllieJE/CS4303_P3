@@ -6,8 +6,8 @@ class Orbiter extends Interactable {
   float tile_size;
   float radians_per_frame;
   
-  Orbiter(float x, float y, Level level, float radius, float init_dir, float weight, float speed, Boolean centred, float tile_size) {
-    super(x, y, level);
+  Orbiter(float x, float y, float radius, float init_dir, float weight, float speed, Boolean centred, float tile_size) {
+    super(x, y);
     this.tile_size = tile_size;
     this.radius = radius*tile_size;
     this.dir = radians(init_dir);

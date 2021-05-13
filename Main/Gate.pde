@@ -6,8 +6,8 @@ class Gate extends Interactable {
   PVector startPoint;
   PVector endPoint;
   
-  Gate(float x, float y, Level level, String colour, int edge, float tile_size) {
-    super(x, y, level);
+  Gate(float x, float y, String colour, int edge, float tile_size) {
+    super(x, y);
     int[] colourRGB = COLOURS.get(colour);
     colourString = colour;
     this.colour = color(colourRGB[0], colourRGB[1], colourRGB[2]);
