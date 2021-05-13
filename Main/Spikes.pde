@@ -10,13 +10,15 @@ class Spikes extends Interactable {
   Boolean active;
   int timer;
   
-  Spikes(float x, float y, float tile_size, float seconds_alive, float seconds_delay) {
-    super(x, y);
+  Spikes(int x, int y, float tile_size, float seconds_alive, float seconds_delay, float proportionalSize, float shift) {
+    super(x, y, tile_size, proportionalSize, shift);
     this.size = tile_size/(SPIKES_PER_TILE*2.2);  
     this.increment = tile_size/(SPIKES_PER_TILE+1);  // how many "gaps" there are between each layer of spikes and the edges of the tile
     time_alive = fps*seconds_alive;
     time_delay = fps*seconds_delay;
     this.tile_size = tile_size;
+    
+    
     active = true;
     state = max_state;
     timer = 0;
@@ -76,35 +78,35 @@ class Spikes extends Interactable {
     loseLife();
   }
   
-  Boolean collision(Player p) {
+  Boolean collision(float x, float y, float objectSize) {
     
     // only check if the spikes are active
     if (active) {
-      float player_pos_x = p.position.x;
-      float player_pos_y = p.position.y;
+      float player_pos_x = x;
+      float player_pos_y = y;
       
       float closest_x = player_pos_x;
       float closest_y = player_pos_y;
       
       // check if player is inside the spikes (i.e. spikes become active with player on top)
-      if (player.position.x >= position.x && p.position.x <= position.x+tile_size && p.position.y >= position.y && p.position.y <= position.y+tile_size) {
+      if (player.position.x >= position.x && x <= position.x+tile_size && y >= position.y && y <= position.y+tile_size) {
         return true;
       }
       
       // check if player is to the left of the spikes
-      if (p.position.x < position.x) {
+      if (x < position.x) {
         closest_x = position.x;
       }
       // check if player is to the right of the spikes
-      else if (p.position.x > position.x+tile_size) {
+      else if (x > position.x+tile_size) {
         closest_x = position.x+tile_size;
       }
       // check if player is above the spikes
-      if (p.position.y < position.y) {
+      if (y < position.y) {
         closest_y = position.y;
       }
       // check if player is below the spikes
-      else if (p.position.y >= position.y+tile_size) {
+      else if (y >= position.y+tile_size) {
         closest_y = position.y+tile_size;
       }
       
@@ -112,7 +114,7 @@ class Spikes extends Interactable {
       float dist_y = player_pos_y - closest_y;
       float distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
       
-      if (distance < p.size/2)  {
+      if (distance < objectSize/2)  {
         return true;
       }
     }

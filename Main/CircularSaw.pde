@@ -12,17 +12,15 @@ class CircularSaw extends Interactable {
   PImage img;
   float waitTime;
   
-  CircularSaw(float x, float y, float dx, float dy, float size, float speed, float delay, boolean centred, float tile_size) {
-    super(x, y);
-    this.size = tile_size*size;
+  CircularSaw(int x, int y, int dx, int dy, float speed, float delay, boolean centred, float tile_size, float proportionalSize, float shift) {
+    super(x, y, tile_size, proportionalSize, shift);
     this.delay = delay*fps;
     this.waitTime = 0;
     this.speed = tile_size*(speed/fps);  // how far to move every second since speed is given in tiles per second
     this.centred = centred ? 0.5 : 0;
     this.position.x += tile_size*this.centred;
     this.position.y += tile_size*this.centred;
-    
-    target = new PVector(dx += tile_size*this.centred, dy += tile_size*this.centred);
+    target = new PVector(dx, dy);
     start = position.copy();
     end = target.copy();
     
@@ -33,12 +31,13 @@ class CircularSaw extends Interactable {
     loseLife();
   }
   
-  Boolean collision(Player p) {
-    return position.dist(player.position) <= size/2+player.size/2;
+  Boolean collision(float x, float y, float objectSize) {
+    return position.dist(new PVector(x, y)) <= size/2+objectSize/2;
   }
   
   void move() {
-    PVector dir = PVector.sub(target, position);
+    PVector targetPos = new PVector(target.x*tile_size+shift, target.y*tile_size);
+    PVector dir = PVector.sub(targetPos, position);
     
     if (dir.mag() <= speed) {
       position = target;

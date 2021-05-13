@@ -1,8 +1,16 @@
 import java.util.*;
 
 final int PLAYER_ANIMATION_FRAMES = 6;
-final int PLAYER_SIZE_PROPORTION = 60;
-final float PLAYER_INIT_X_PROPORTION = 4.0;
+final float PLAYER_SIZE_PROPORTION = 0.4;
+
+final float SAW_PROPORTION = 1.0;
+final float COLLIDER_PROPORTION = 1.0;
+final float GATE_PROPORTION = 1.0;
+final float KEY_PROPORTION = 0.4;
+final float ORBITER_PROPORTION = 1.0;
+final float SPIKES_PROPORTION = 1.0;
+final float SPRINGPAD_PROPORTION = 0.5;
+final float GOAL_PROPORTION = 0.6;
 
 final float PLAYER_TURNING_SPEED = PI/64;  // base turning speed, should be slowre on lower friction areas
 
@@ -31,7 +39,6 @@ int lives;
 int level;
 
 Player player;
-List<Obstacle> obstacles;
 List<Key> keys;
 List<Gate> gates;
 List<UiElement> ui_elements;
@@ -275,15 +282,14 @@ void update() {
     }
     
     for (Interactable i : interactables) {
-      if (i.collision(player)) {
+      if (i.collision(player.position.x, player.position.y, player.size)) {
         i.onCollision(player);
       }
     }
     
     contactResolver.resolveContacts(contacts) ;  
     
-    if (goal.collision(player)) {
-      // TODO: DONT JUST HAVE IT GO TO LEVEL 2 EVERY TIME 
+    if (goal.collision(player.position.x, player.position.y, player.size)) {
       nextLevel();
     }
     

@@ -17,7 +17,7 @@ class Level {
   
   void create_ui() {
     ui_elements = new ArrayList<UiElement>();
-    ui_elements.add(new LifeIndicator(displayWidth/80, displayHeight/100, displayWidth/(PLAYER_SIZE_PROPORTION*1.2)));
+    ui_elements.add(new LifeIndicator(displayWidth/80, displayHeight/100, tile_size*(PLAYER_SIZE_PROPORTION/1.2)));
     
     ui = new UI(horizontalShift, tile_size*tilesX);
   }
@@ -39,7 +39,6 @@ class Level {
   
   void create_entities() {
     
-    obstacles = new ArrayList<Obstacle>();
     keys = new ArrayList<Key>();
     gates = new ArrayList<Gate>();
     
@@ -48,19 +47,21 @@ class Level {
     for (String s : entity_data_list) {
       String[] entity_data = s.split(",");
       
-      float x_pos = (tile_size*Integer.parseInt(entity_data[1])) + horizontalShift;
-      float y_pos = tile_size*Integer.parseInt(entity_data[2]);
+      int x_pos = Integer.parseInt(entity_data[1]);
+      int y_pos = Integer.parseInt(entity_data[2]);
+      //float x_pos = (tile_size*Integer.parseInt(entity_data[1])) + horizontalShift;
+      //float y_pos = tile_size*Integer.parseInt(entity_data[2]);
       
       switch (entity_data[0]) {
         case "p":
           int facing = Integer.parseInt(entity_data[3]);
-          player = new Player(x_pos+tile_size/2, y_pos+tile_size/2, 0.8, friction, facing, tile_size);
+          player = new Player(x_pos, y_pos, 0.8, friction, facing, tile_size, PLAYER_SIZE_PROPORTION, horizontalShift);
           forceRegistry.add(player, friction);
           break;
         case "s":
-          float seconds_alive = Float.parseFloat(entity_data[3]);
-          float seconds_delay = Float.parseFloat(entity_data[4]);
-          interactables.add(new Spikes(x_pos, y_pos, tile_size, seconds_alive, seconds_delay));
+          //float seconds_alive = Float.parseFloat(entity_data[3]);
+          //float seconds_delay = Float.parseFloat(entity_data[4]);
+          //interactables.add(new Spikes(x_pos, y_pos, tile_size, seconds_alive, seconds_delay, SPIKES_PROPORTION, horizontalShift));
           break;
         case "o":
           float radius = Float.parseFloat(entity_data[3]);
@@ -68,7 +69,7 @@ class Level {
           float weight = Float.parseFloat(entity_data[5]);
           float speed = Float.parseFloat(entity_data[6]);
           Boolean centred = entity_data[7].equals("1");
-          interactables.add(new Orbiter(x_pos, y_pos, radius, init_dir, weight, speed, centred, tile_size));
+          interactables.add(new Orbiter(x_pos, y_pos, init_dir, weight, speed, centred, tile_size, radius, horizontalShift));
           break;
         case "c":
           int dx = Integer.parseInt(entity_data[3]);
@@ -77,29 +78,30 @@ class Level {
           speed = Float.parseFloat(entity_data[6]);
           float delay = Float.parseFloat(entity_data[7]);
           centred = entity_data[8].equals("1");
-          interactables.add(new CircularSaw(x_pos, y_pos, tile_size*dx+horizontalShift, tile_size*dy, size, speed, delay, centred, tile_size));
+          interactables.add(new CircularSaw(x_pos, y_pos, dx, dy, speed, delay, centred, tile_size, SAW_PROPORTION, horizontalShift));
           break;
         case "G":
           String colourString = entity_data[3];
           int edge = Integer.parseInt(entity_data[4]);
-          Gate g = new Gate(x_pos, y_pos, colourString, edge, tile_size);
+          Gate g = new Gate(x_pos, y_pos, colourString, edge, tile_size, GATE_PROPORTION, horizontalShift);
           interactables.add(g);
           gates.add(g);
           break;
         case "k":
           colourString = entity_data[3];
-          interactables.add(new Key(x_pos, y_pos, colourString, tile_size));
+          interactables.add(new Key(x_pos, y_pos, colourString, tile_size, KEY_PROPORTION, horizontalShift));
           break;
         case "g":
-          goal = new Goal(x_pos, y_pos, tile_size);
+          goal = new Goal(x_pos, y_pos, tile_size, GOAL_PROPORTION, horizontalShift);
           break;
         case "j":
-          interactables.add(new Springpad(x_pos, y_pos, tile_size));
+          centred = entity_data[3].equals("1");
+          interactables.add(new Springpad(x_pos, y_pos, centred, tile_size, SPRINGPAD_PROPORTION, horizontalShift));
           break;
         case "C":
           size = Float.parseFloat(entity_data[3]);
           centred = entity_data[4].equals("1");
-          interactables.add(new Collider(x_pos, y_pos,size, centred, tile_size));
+          interactables.add(new Collider(x_pos, y_pos,size, centred, tile_size, COLLIDER_PROPORTION, horizontalShift));
           break;
       }
     }

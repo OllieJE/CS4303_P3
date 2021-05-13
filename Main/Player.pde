@@ -22,10 +22,16 @@ class Player extends Rigid_Body {
   float jumpTime;
   float jumpDistance;
   
-  Player(float x, float y, float m, Friction f, int facing, float tile_size) {
-    super(x, y, m);
-    this.tile_size = tile_size;
-    this.size = displayWidth/PLAYER_SIZE_PROPORTION;
+  PVector tilePosition;
+  float proportionalSize;
+  float shift;
+  
+  Player(int x, int y, float m, Friction f, int facing, float tile_size, float proportionalSize, float shift) {
+    super(x*tile_size+tile_size/2, y*tile_size+tile_size/2, m);
+    tilePosition = new PVector(x, y);
+    this.proportionalSize = proportionalSize;
+    updateSize(tile_size, shift);
+    
     this.baseSize = size;
     animation= new Animation("crab", PLAYER_ANIMATION_FRAMES);
     orientation = HALF_PI*facing;
@@ -42,6 +48,17 @@ class Player extends Rigid_Body {
     
     jumpTime = fps*1.5;
     jumpDistance = tile_size*2.1;  // jump a little over two tiles
+  }
+  
+  void updateSize(float tile_size, float shift) {    
+    this.tile_size = tile_size;
+    this.shift = shift;
+    size = proportionalSize*this.tile_size;
+    position.x = this.tile_size*tilePosition.x + this.shift + tile_size/2;
+    position.y = this.tile_size*tilePosition.y + tile_size/2;
+    
+    this.baseSize = size;
+    
   }
   
   float get_target_dir() {

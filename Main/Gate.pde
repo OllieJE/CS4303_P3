@@ -6,8 +6,8 @@ class Gate extends Interactable {
   PVector startPoint;
   PVector endPoint;
   
-  Gate(float x, float y, String colour, int edge, float tile_size) {
-    super(x, y);
+  Gate(int x, int y, String colour, int edge, float tile_size, float proportionalSize, float shift) {
+    super(x, y, tile_size, proportionalSize, shift);
     int[] colourRGB = COLOURS.get(colour);
     colourString = colour;
     this.colour = color(colourRGB[0], colourRGB[1], colourRGB[2]);
@@ -40,7 +40,7 @@ class Gate extends Interactable {
     p.acceleration.mult(0);
   }
   
-  Boolean collision (Player p) {
+  Boolean collision (float x, float y, float objectSize) {
     if (!active) {
       return false;
     }
@@ -49,27 +49,27 @@ class Gate extends Interactable {
     float p1_x = position.x+startPoint.x;
     float p1_y = position.y+startPoint.y;
     
-    float dist_x = p.position.x - position.x;
-    float dist_y = p.position.y - position.y;
+    float dist_x = x - position.x;
+    float dist_y = y - position.y;
     float distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
     
-    if (distance <= player.size) {
+    if (distance <= objectSize) {
       return true;
     }
     
     float p2_x = position.x + endPoint.x;
     float p2_y = position.y + endPoint.y;
     
-    dist_x = p.position.x - p2_x;
-    dist_y = p.position.y - p2_y;
+    dist_x = x - p2_x;
+    dist_y = y - p2_y;
     distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
     
-    if (distance <= p.size) {
+    if (distance <= objectSize) {
       return true;
     }
     
     // get closest point on unbounded line
-    float dot = ( ((p.position.x-p1_x)*(p2_x-p1_x)) + ((p.position.y-p1_y)*(p2_y-p1_y)) ) / pow(gateLength,2);
+    float dot = ( ((x-p1_x)*(p2_x-p1_x)) + ((y-p1_y)*(p2_y-p1_y)) ) / pow(gateLength,2);
     float closestX = p1_x + (dot * (p2_x-p1_x));
     float closestY = p1_y + (dot * (p2_y-p1_y));
     
@@ -78,10 +78,10 @@ class Gate extends Interactable {
     float p2_dist = dist(closestX, closestY, p2_x, p2_y);
     
     if (p1_dist+p2_dist >= gateLength && p1_dist+p2_dist <= gateLength) {
-      dist_x = closestX - p.position.x;
-      dist_y = closestY - p.position.y;
+      dist_x = closestX - x;
+      dist_y = closestY - y;
       distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
-      if (distance <= p.size) {  
+      if (distance <= objectSize) {  
         return true;
       }
       

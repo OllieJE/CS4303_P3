@@ -54,25 +54,25 @@ class LevelEditor {
   }
 
   void changeTile(int x, int y) {
-    
-    // if not using the switch commented out below then have to make sure the tiles array below is in the right order 
-    String newTile = Integer.toString(activeTile);
-    //switch (activeTile) {
-      //case 0:
-      //  newTile = "0";
-      //  break;
-      //case 1:
-      //  newTile = "1";
-      //  break;
-      //case 2:
-      //  newTile = "2";
-      //  break;
-      //case 3:
-      //  newTile = "3";
-      //  break;
-      //default:
-      //  newTile = "0";
-    //}
+    String newTile = "0";
+    switch (activeTile) {
+      case 0:
+        newTile = "0";
+        break;
+      case 1:
+        newTile = "1";
+        break;
+      case 2:
+        newTile = "2";
+        break;
+      case 3:
+        newTile = "3";
+        break;
+      case 4:
+        break;
+      default:
+        newTile = "0";
+    }
     levelData.get(y).set(x, newTile);
     
   }
@@ -178,7 +178,7 @@ class LevelEditor {
     } else {
       // check if one of the four tile types was clicked
       // dont need to check y value of mouse as we already have 
-      for (int i = 0; i < 4; i++) {
+      for (int i = 0; i < 5; i++) {
         float boundLeft = i*(displayWidth/TILE_TYPES);
         float boundRight = boundLeft + ui_height;
         if (x >= boundLeft && x <= boundRight) {
