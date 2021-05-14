@@ -22,6 +22,8 @@ class Key extends Interactable {
       active = false;
   }
   
+  void secondClick(int x, int y, float centred){};
+  
   Boolean collision(float x, float y, float objectSize) {
     if (!active) {
       return false;

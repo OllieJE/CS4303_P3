@@ -4,7 +4,7 @@ class CircularSaw extends Interactable {
   PVector start;
   PVector end;
   
-  float size;
+  //float size;
   float delay;
   float speed;
   float centred;
@@ -20,12 +20,13 @@ class CircularSaw extends Interactable {
     this.centred = centred ? 0.5 : 0;
     this.position.x += tile_size*this.centred;
     this.position.y += tile_size*this.centred;
-    target = new PVector(dx, dy);
+    target = new PVector(dx*tile_size + shift + this.centred*tile_size, dy*tile_size + this.centred*tile_size);
     start = position.copy();
     end = target.copy();
-    
     img = loadImage("images/saw/saw0001.png");
   }
+  
+  //voidi secondClick();
   
   void onCollision(Player p) {
     loseLife();
@@ -35,9 +36,13 @@ class CircularSaw extends Interactable {
     return position.dist(new PVector(x, y)) <= size/2+objectSize/2;
   }
   
-  void move() {
-    PVector targetPos = new PVector(target.x*tile_size+shift, target.y*tile_size);
-    PVector dir = PVector.sub(targetPos, position);
+  void secondClick(int x, int y, float centred) {
+    target = new PVector(x*tile_size + shift, y*tile_size + centred*tile_size);
+    end = target.copy();
+  }
+  
+  void move() {    
+    PVector dir = PVector.sub(target, position);
     
     if (dir.mag() <= speed) {
       position = target;
@@ -62,7 +67,6 @@ class CircularSaw extends Interactable {
   }
   
   void draw() {
-    
     move(); 
     
     pushMatrix();

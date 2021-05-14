@@ -22,6 +22,8 @@ class Springpad extends Interactable {
     player.jump();
   }
   
+  void secondClick(int x, int y, float centred){};
+  
   Boolean collision(float x, float y, float objectSize) {
     return (position.dist(new PVector(x, y)) <= objectSize/2);
   }

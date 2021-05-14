@@ -24,6 +24,8 @@ class Spikes extends Interactable {
     timer = 0;
   }
   
+  void secondClick(int x, int y, float centred){};
+  
   void draw() {
     stroke(0);
     fill(50);

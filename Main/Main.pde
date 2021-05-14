@@ -248,12 +248,18 @@ void loseLife() {
 }
 
 
-void updateEditor() {
+//void updateEditor() {
 
-  if (mousePressed) {
+//  if (mousePressed) {
+//    levelEditor.handleClick(mouseX, mouseY);
+//    //int[] xy = levelEditor.getTilePos(mouseX, mouseY);
+//    //levelEditor.changeTile(xy[0], xy[1]);
+//  }
+//}
+
+void mousePressed() {
+  if (screen == 2) {
     levelEditor.handleClick(mouseX, mouseY);
-    //int[] xy = levelEditor.getTilePos(mouseX, mouseY);
-    //levelEditor.changeTile(xy[0], xy[1]);
   }
 }
 
@@ -310,7 +316,7 @@ void draw() {
     ui.draw();
   } else if (screen == 2) {
     background(0);
-    updateEditor();
+    //updateEditor();
     levelEditor.draw();
   }
   

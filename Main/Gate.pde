@@ -18,6 +18,8 @@ class Gate extends Interactable {
     endPoint = new PVector((edge==2 || edge==3) ? 0 : gateLength, (edge==0 || edge==1) ? 0 : gateLength);
   }
   
+  void secondClick(int x, int y, float centred){};
+  
   void draw() {
     if (active) {
        stroke(colour);

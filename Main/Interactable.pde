@@ -23,6 +23,8 @@ abstract class Interactable {
     position.y = this.tile_size*tilePosition.y;
     
   }
+  
+  abstract void secondClick(int x, int y, float centred);
     
   abstract void onCollision(Player p);
   

@@ -17,6 +17,8 @@ class Collider extends Interactable {
     circle(position.x, position.y, size);
   }
   
+  void secondClick(int x, int y, float centred){};
+  
   void onCollision(Player p) {
     PVector distance = p.position.copy();
     distance.sub(position);

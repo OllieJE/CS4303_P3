@@ -4,8 +4,9 @@ class Orbiter extends Interactable {
   float centred;
   float tile_size;
   float radians_per_frame;
+  float clockwise;
   
-  Orbiter(int x, int y, float init_dir, float weight, float speed, Boolean centred, float tile_size, float proportionalSize, float shift) {
+  Orbiter(int x, int y, float init_dir, float weight, float speed, Boolean centred, boolean clockwise, float tile_size, float proportionalSize, float shift) {
     super(x, y, tile_size, proportionalSize, shift);
     this.tile_size = tile_size;
     this.dir = radians(init_dir);
@@ -14,8 +15,16 @@ class Orbiter extends Interactable {
     this.centred = centred ? 0.5 : 0;
     this.position.x += tile_size*this.centred;
     this.position.y += tile_size*this.centred;
-    
-    this.size += this.centred*tile_size;
+    this.clockwise = clockwise ? 1f : -1f;
+    //this.size += this.centred*tile_size;
+  }
+  
+  void secondClick(int x, int y, float centred) {
+    PVector endPoint = new PVector(x*tile_size + shift + centred*tile_size, y*tile_size + centred*tile_size);
+
+    endPoint.sub(position);
+
+    size = endPoint.mag();
   }
   
   void draw() {
@@ -29,10 +38,12 @@ class Orbiter extends Interactable {
     line(0, 0, 0, size);
     
     popMatrix();
-    
-    dir += radians_per_frame;
+
+    dir += radians_per_frame*clockwise;
     if (dir >= TWO_PI) {
       dir = 0;
+    } else if (dir <= 0) {
+      dir = TWO_PI;
     }
     
   }

@@ -69,7 +69,8 @@ class Level {
           float weight = Float.parseFloat(entity_data[5]);
           float speed = Float.parseFloat(entity_data[6]);
           Boolean centred = entity_data[7].equals("1");
-          interactables.add(new Orbiter(x_pos, y_pos, init_dir, weight, speed, centred, tile_size, radius, horizontalShift));
+          boolean clockwise = entity_data[8].equals("1");
+          interactables.add(new Orbiter(x_pos, y_pos, init_dir, weight, speed, centred, clockwise, tile_size, radius, horizontalShift));
           break;
         case "c":
           int dx = Integer.parseInt(entity_data[3]);
