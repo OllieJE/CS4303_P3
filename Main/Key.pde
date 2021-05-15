@@ -2,14 +2,18 @@ class Key extends Interactable {
   color colour;
   String colourString;
   float size;
+  float centred;
   
-  Key(int x, int y, String colour, float tile_size, float proportionalSize, float shift) {
+  Key(int x, int y, String colour, boolean centred, float tile_size, float proportionalSize, float shift) {
     super(x, y, tile_size, proportionalSize, shift);
     int[] colourRGB = COLOURS.get(colour);
     colourString = colour;
     this.colour = color(colourRGB[0], colourRGB[1], colourRGB[2]);
     size = tile_size*0.4;
     active = true;
+    this.centred = centred ? 0.5 : 0;
+    this.position.x += tile_size*this.centred;
+    this.position.y += tile_size*this.centred;
   }
   
   void onCollision(Player p) {

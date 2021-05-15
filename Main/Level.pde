@@ -90,7 +90,8 @@ class Level {
           break;
         case "k":
           colourString = entity_data[3];
-          interactables.add(new Key(x_pos, y_pos, colourString, tile_size, KEY_PROPORTION, horizontalShift));
+          centred = entity_data[4].equals("1");
+          interactables.add(new Key(x_pos, y_pos, colourString, centred, tile_size, KEY_PROPORTION, horizontalShift));
           break;
         case "g":
           goal = new Goal(x_pos, y_pos, tile_size, GOAL_PROPORTION, horizontalShift);
@@ -100,9 +101,8 @@ class Level {
           interactables.add(new Springpad(x_pos, y_pos, centred, tile_size, SPRINGPAD_PROPORTION, horizontalShift));
           break;
         case "C":
-          size = Float.parseFloat(entity_data[3]);
-          centred = entity_data[4].equals("1");
-          interactables.add(new Collider(x_pos, y_pos,size, centred, tile_size, COLLIDER_PROPORTION, horizontalShift));
+          centred = entity_data[3].equals("1");
+          interactables.add(new Collider(x_pos, y_pos, centred, tile_size, COLLIDER_PROPORTION, horizontalShift));
           break;
       }
     }

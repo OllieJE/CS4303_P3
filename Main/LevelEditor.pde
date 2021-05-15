@@ -10,6 +10,7 @@ class LevelEditor {
 
   PImage sawIcon;
   PImage gateKeyIcon;
+  PImage gateKeyIcon2;
   PImage orbiterCWIcon;
   PImage orbiterACWIcon;
   PImage springpadIcon;
@@ -22,10 +23,15 @@ class LevelEditor {
   PVector snap1;
   float centred;
   
+  int gateColour;
+  boolean placingKey;
+  
   // the interactable the player needes to click again for (e.g. saw destination or orbiter endpoint)
   Interactable changing;
 
   LevelEditor() {
+    placingKey = false;
+    gateColour = 0;
     changing = null;
     snap1 = new PVector(0, 0);
     centred = 0f;
@@ -47,6 +53,7 @@ class LevelEditor {
 
     sawIcon = loadImage("images/saw/saw0001.png");
     gateKeyIcon  = loadImage("images/gatekey/gatekey0000.png");
+    gateKeyIcon2  = loadImage("images/gatekey/gatekey0001.png");
     orbiterCWIcon = loadImage("images/orbiter/orbiterCW.png");
     orbiterACWIcon = loadImage("images/orbiter/orbiterACW.png");
     springpadIcon = loadImage("images/jumppad/jumppad0000.png");
@@ -56,6 +63,7 @@ class LevelEditor {
     entityImages = new ArrayList<PImage>() {{
       add(sawIcon);
       add(gateKeyIcon);
+      add(gateKeyIcon2);
       add(orbiterCWIcon);
       add(orbiterACWIcon);
       add(springpadIcon);
@@ -105,20 +113,54 @@ class LevelEditor {
           changing = saw;
           break;
         case 5:
+          // vertical gate and key
+          Gate vGate = new Gate((int)snap1.x, (int)snap1.y, (String) GATE_COLOURS.keySet().toArray()[gateColour], 3, tile_size, GATE_PROPORTION, horizontalShift);
+          interactables.add(vGate);
+          changing = vGate;
+          placingKey = true;
+          
           break;
         case 6:
+          // horizontal gate and key
+          Gate hGate = new Gate((int)snap1.x, (int)snap1.y, (String) GATE_COLOURS.keySet().toArray()[gateColour], 0, tile_size, GATE_PROPORTION, horizontalShift);
+          interactables.add(hGate);
+          changing = hGate;
+          placingKey = true;
+          break;
+        case 7:
+          // clockwise orbiter
           Interactable clockwiseOrbiter = new Orbiter((int)snap1.x, (int)snap1.y, 0f, 3, 4, centred > 0, true, tile_size,  0f, horizontalShift);
           interactables.add(clockwiseOrbiter);
           changing = clockwiseOrbiter;
           break;
-        case 7:
+        case 8:
+          // anti-clockwise orbiter
           Interactable antiClockwiseOrbiter = new Orbiter((int)snap1.x, (int)snap1.y, 0f, 3, 4, centred > 0, false, tile_size, 0f, horizontalShift);
           interactables.add(antiClockwiseOrbiter);
           changing = antiClockwiseOrbiter;
           break;
+        case 9:
+          // jumppad
+          Interactable jumppad = new Springpad((int)snap1.x, (int)snap1.y, centred > 0, tile_size, SPRINGPAD_PROPORTION, horizontalShift);
+          interactables.add(jumppad);
+          break;
+        case 10:
+          // spikes
+          break;
+        case 11:
+          // collider
+          Interactable collider = new Collider((int)snap1.x, (int)snap1.y, centred > 0, tile_size, COLLIDER_PROPORTION, horizontalShift);
+          interactables.add(collider);
+          break;
       }
     } else {
       changing.secondClick((int)snap1.x, (int)snap1.y, centred);
+      if (placingKey) {
+        interactables.add(new Key((int)snap1.x, (int)snap1.y, (String) GATE_COLOURS.keySet().toArray()[gateColour], centred > 0, tile_size, KEY_PROPORTION, horizontalShift));
+        placingKey = false;
+        gateColour = (gateColour+1)%GATE_COLOURS.size();
+
+      }
       changing = null;
     }
   }
@@ -135,6 +177,9 @@ class LevelEditor {
   void updateTileSize() {
     tile_size = (displayHeight-ui_height)/rowCount;
     horizontalShift = (displayWidth-(tile_size*columnCount))/2;
+    
+    // very difficult to get them to scale and move with a changing tilemap size, especially circular saw
+    interactables.clear();
   }
 
   void addRow() {

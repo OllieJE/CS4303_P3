@@ -4,7 +4,7 @@ final int PLAYER_ANIMATION_FRAMES = 6;
 final float PLAYER_SIZE_PROPORTION = 0.4;
 
 final float SAW_PROPORTION = 1.0;
-final float COLLIDER_PROPORTION = 1.0;
+final float COLLIDER_PROPORTION = 0.9;
 final float GATE_PROPORTION = 1.0;
 final float KEY_PROPORTION = 0.4;
 final float ORBITER_PROPORTION = 1.0;
@@ -20,13 +20,13 @@ final int SPIKES_PER_TILE = 5;
 
 final float UI_HEIGHT_PROPORTION = 0.1;
 
-final float FRICTION_PROPORTION = 700000;  // base friction. surface friction is multiplied by this
+final float FRICTION_PROPORTION = 800000;  // base friction. surface friction is multiplied by this
 
 final float PUSH_FORCE_PROPORTION = 32000;
 
 final int TEXT_SIZE_PROPORTION = 60;
 
-final int TILE_TYPES = 11;  // count of all tile types excluding the player (tiles includes floor and entity types)
+final int TILE_TYPES = 12;  // count of all tile types excluding the player (tiles includes floor and entity types)
 // note that this can't go too high or the level editor UI will die
 // this is an issue on lower-res computers
 
@@ -58,6 +58,13 @@ final HashMap<String, int[]> COLOURS = new HashMap<String, int[]>() {{
     put("darkblue", new int[]{0, 100, 200});
     put("yellow", new int[]{200, 175, 120});
     put("white", new int[]{255, 255, 255});
+    put("red", new int[]{255, 0, 0});
+    put("black", new int[]{0, 0, 0});
+    put("grey", new int[]{100, 100, 100});
+}};
+
+final HashMap<String, int[]> GATE_COLOURS = new HashMap<String, int[]>() {{
+    put("orange", new int[]{255, 160, 0});
     put("red", new int[]{255, 0, 0});
     put("black", new int[]{0, 0, 0});
     put("grey", new int[]{100, 100, 100});

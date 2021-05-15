@@ -21,8 +21,10 @@ class CircularSaw extends Interactable {
     this.position.x += tile_size*this.centred;
     this.position.y += tile_size*this.centred;
     target = new PVector(dx*tile_size + shift + this.centred*tile_size, dy*tile_size + this.centred*tile_size);
-    start = position.copy();
-    end = target.copy();
+    start = new PVector(x, y);
+    end = new PVector(dx, dy);
+    //start = position.copy();
+    //end = target.copy();
     img = loadImage("images/saw/saw0001.png");
   }
   
@@ -43,14 +45,16 @@ class CircularSaw extends Interactable {
   
   void move() {    
     PVector dir = PVector.sub(target, position);
+    PVector startPos = new PVector(start.x*tile_size + shift + this.centred*tile_size, start.y*tile_size + this.centred*tile_size);
+    PVector endPos = new PVector(end.x*tile_size + shift + this.centred*tile_size, end.y*tile_size + this.centred*tile_size);
     
     if (dir.mag() <= speed) {
       position = target;
       if (waitTime >= delay) {
-        if (target.x == start.x && target.y == start.y) {
-          target = end.copy();
+        if (target.x == startPos.x && target.y == startPos.y) {
+          target = endPos.copy();
         } else {
-          target = start.copy();
+          target = startPos.copy();
         }
         waitTime = 0; 
       } else {
