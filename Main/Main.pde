@@ -1,4 +1,9 @@
 import java.util.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.FilenameFilter;
 
 final int PLAYER_ANIMATION_FRAMES = 6;
 final float PLAYER_SIZE_PROPORTION = 0.4;
@@ -86,6 +91,7 @@ Friction friction;
 
 Level current_level;
 LevelEditor levelEditor;
+LevelSelect levelSelect;
 MainMenu mainMenu;
 ContactResolver contactResolver ;
 UI ui;
@@ -116,7 +122,7 @@ void setup() {
 void nextLevel() {
   level++;
   saveGame();
-  current_level = new Level(level);
+  current_level = new Level("level_" + level);
 }
 
 void saveGame() {
@@ -132,7 +138,7 @@ void loadGame() {
     String[] saveData = loadStrings("savedata/savefile");
     level = Integer.parseInt(saveData[0]);
     lives = Integer.parseInt(saveData[1]);
-    current_level = new Level(level);
+    current_level = new Level("level_" + level);
     screen = 1;
   } catch (NullPointerException e) {
     println("No save file found.");
@@ -143,7 +149,7 @@ void loadGame() {
 
 void startNewGame() {
   level = 1;
-  current_level = new Level(1);
+  current_level = new Level("level_" + level);
   
 }
 
@@ -199,6 +205,10 @@ void keyPressed() {
         levelEditor = new LevelEditor();
         screen = 2;
         break;
+      case '5':
+        levelSelect = new LevelSelect();
+        screen = 3;
+        break;
     }
   } else if (screen == 2) {
     if (key == CODED) {
@@ -218,6 +228,22 @@ void keyPressed() {
            break ;
          
        }
+    } else {
+      if (key == RETURN || key == ENTER) {
+        if (!levelEditor.enteringName) {
+          levelEditor.enteringName = true;
+        } else {
+          levelEditor.saveMap();
+          screen = 0;
+        }
+      } else if (key == BACKSPACE) {
+        if (levelEditor.levelName.length()>0) {
+          levelEditor.levelName=levelEditor.levelName.substring(0, levelEditor.levelName.length()-1);
+        }
+      } else {
+        levelEditor.levelName += key;
+      }
+      
     }
   }
 } 
@@ -325,6 +351,8 @@ void draw() {
     background(0);
     //updateEditor();
     levelEditor.draw();
+  } else if (screen == 3 ) {
+    levelSelect.draw();
   }
   
   

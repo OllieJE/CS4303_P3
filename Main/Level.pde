@@ -1,6 +1,6 @@
 class Level {
   
-  int level_id;
+  String levelName;
   float tile_size;
   int tilesX;
   int tilesY;
@@ -9,8 +9,8 @@ class Level {
     
   float horizontalShift;
   
-  Level(int level_id) {
-    this.level_id = level_id;
+  Level(String levelName) {
+    this.levelName = levelName;
     loadLevel();
     create_ui();
   }
@@ -113,10 +113,10 @@ class Level {
     contacts = new ArrayList<Contact>();
     contactResolver = new ContactResolver();
     
-    String level_name = "levels/level_" + Integer.toString(level_id) + ".txt";
-    String[] level_string_data = loadStrings(level_name);
+    String path = "levels\\" + levelName;
+    String[] level_string_data = loadStrings(path);
     
-    String entity_name = "levels/level_" + Integer.toString(level_id) + "_entities.txt";
+    String entity_name = "levels\\" + levelName + "_entities";
     entity_data_list = loadStrings(entity_name);
 
     tilesX = level_string_data[0].length();
