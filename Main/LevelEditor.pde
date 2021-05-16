@@ -121,6 +121,25 @@ class LevelEditor {
         pr.println();
       }
       pr.close();
+      
+      String eDirName = "custom_maps\\" + levelName + "_entities";
+      o = createOutput(eDirName);
+
+      pr = new PrintWriter(o);    
+
+      for (Interactable i : interactables) {
+        pr.println(i.getEntityData());
+      }
+      
+      if (player != null) {
+        pr.println(player.getEntityData());
+      }
+      
+      if (goal != null) {
+        pr.println(goal.getEntityData());
+      }
+      
+      pr.close();
     
     }
     catch (NullPointerException e) {
@@ -206,6 +225,9 @@ class LevelEditor {
 
     // very difficult to get them to scale and move with a changing tilemap size, especially circular saw
     interactables.clear();
+    
+    player = null;
+    goal = null;
   }
 
   void addRow() {
@@ -281,6 +303,31 @@ class LevelEditor {
         levelData.get(i).remove(levelData.get(i).size()-1);
       }
       updateTileSize();
+    }
+  }
+  
+  void placePlayer() {
+    if (mouseX < columnCount*tile_size+horizontalShift && mouseY < rowCount*tile_size) {
+      player = new Player((int)snap1.x, (int)snap1.y, 0.8, friction, 0, tile_size, PLAYER_SIZE_PROPORTION, horizontalShift);
+    }
+  }
+  
+  void placeGoal() {
+    if (mouseX < columnCount*tile_size+horizontalShift && mouseY < rowCount*tile_size) {
+      goal = new Goal((int)snap1.x, (int)snap1.y, tile_size, GOAL_PROPORTION, horizontalShift);
+    }
+  }
+  
+  void removeEntity(float x, float y) {
+    ArrayList<Interactable> toRemove = new ArrayList<Interactable>();
+    for (Interactable i : interactables) {
+      if (i.collision(x,y,20)) {
+        toRemove.add(i);
+      }
+    }
+    
+    for (Interactable i : toRemove) {
+      interactables.remove(i);
     }
   }
 
@@ -367,7 +414,7 @@ class LevelEditor {
         offset++;
       }
 
-      // draw the six entity types
+      // draw the entity types
       for (PImage p : entityImages) {
         if (activeTile == offset) {
           colorRGB = COLOURS.get("red");
@@ -386,6 +433,14 @@ class LevelEditor {
 
       for (Interactable i : interactables) {
         i.draw();
+      }
+      
+      if (player != null) {
+        player.draw();
+      }
+      
+      if (goal != null) {
+        goal.draw();
       }
 
       updateSnap();

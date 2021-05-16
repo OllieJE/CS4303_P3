@@ -14,6 +14,8 @@ abstract class Interactable {
       position = new PVector();
       updateSize(tile_size, shift);
   }
+  
+  abstract String getEntityData();
     
   void updateSize(float tile_size, float shift) {    
     this.tile_size = tile_size;

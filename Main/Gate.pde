@@ -20,6 +20,18 @@ class Gate extends Interactable {
   
   void secondClick(int x, int y, float centred){};
   
+  String getEntityData() {
+    String[] entityData = new String[5];
+    entityData[0] = "G";
+    entityData[1] = Integer.toString((int)tilePosition.x);
+    entityData[2] = Integer.toString((int)tilePosition.y);
+    entityData[3] = colourString;
+    entityData[4] = Integer.toString(edge);
+    
+    String csvData = String.join(",", entityData);
+    return csvData;
+  }
+  
   void draw() {
     if (active) {
        stroke(colour);
@@ -36,6 +48,8 @@ class Gate extends Interactable {
   }
   
   void onCollision(Player p) {
+    p.position.x += p.velocity.x*-0.3;
+    p.position.y += p.velocity.y*-0.3;
     p.position.x += p.velocity.x*-1;
     p.position.y += p.velocity.y*-1;
     p.velocity.mult(0);
@@ -46,16 +60,14 @@ class Gate extends Interactable {
     if (!active) {
       return false;
     }
-    // check if the player is colliding with either end of the line
-    
-    float p1_x = position.x+startPoint.x;
-    float p1_y = position.y+startPoint.y;
+    float p1_x = position.x + startPoint.x;
+    float p1_y = position.y + startPoint.y;
     
     float dist_x = x - position.x;
     float dist_y = y - position.y;
     float distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
     
-    if (distance <= objectSize) {
+    if (distance <= objectSize/2) {
       return true;
     }
     
@@ -66,12 +78,12 @@ class Gate extends Interactable {
     dist_y = y - p2_y;
     distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
     
-    if (distance <= objectSize) {
+    if (distance <= objectSize/2) {
       return true;
     }
     
     // get closest point on unbounded line
-    float dot = ( ((x-p1_x)*(p2_x-p1_x)) + ((y-p1_y)*(p2_y-p1_y)) ) / pow(gateLength,2);
+    float dot = ( ((x-p1_x)*(p2_x-p1_x)) + ((y-p1_y)*(p2_y-p1_y)) ) / pow(size,2);
     float closestX = p1_x + (dot * (p2_x-p1_x));
     float closestY = p1_y + (dot * (p2_y-p1_y));
     
@@ -79,11 +91,11 @@ class Gate extends Interactable {
     float p1_dist = dist(closestX, closestY, p1_x, p1_y);
     float p2_dist = dist(closestX, closestY, p2_x, p2_y);
     
-    if (p1_dist+p2_dist >= gateLength && p1_dist+p2_dist <= gateLength) {
+    if (p1_dist+p2_dist >= size && p1_dist+p2_dist <= size) {
       dist_x = closestX - x;
       dist_y = closestY - y;
       distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
-      if (distance <= objectSize) {  
+      if (distance <= objectSize/2) {  
         return true;
       }
       

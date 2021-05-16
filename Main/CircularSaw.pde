@@ -28,6 +28,21 @@ class CircularSaw extends Interactable {
     img = loadImage("images/saw/saw0001.png");
   }
   
+  String getEntityData() {
+    String[] entityData = new String[8];
+    entityData[0] = "c";
+    entityData[1] = Integer.toString((int)start.x);
+    entityData[2] = Integer.toString((int)start.y);
+    entityData[3] = Integer.toString((int)end.x);
+    entityData[4] = Integer.toString((int)end.y);
+    entityData[5] = Float.toString(0.8);
+    entityData[6] = "1";
+    entityData[7] = centred > 0 ? "1" : "0";
+    
+    String csvData = String.join(",", entityData);
+    return csvData;
+  }
+  
   //voidi secondClick();
   
   void onCollision(Player p) {
@@ -40,7 +55,7 @@ class CircularSaw extends Interactable {
   
   void secondClick(int x, int y, float centred) {
     target = new PVector(x*tile_size + shift, y*tile_size + centred*tile_size);
-    end = target.copy();
+    end = new PVector(x, y);
   }
   
   void move() {    

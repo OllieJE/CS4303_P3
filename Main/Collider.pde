@@ -15,6 +15,17 @@ class Collider extends Interactable {
     circle(position.x, position.y, size);
   }
   
+  String getEntityData() {
+    String[] entityData = new String[4];
+    entityData[0] = "C";
+    entityData[1] = Integer.toString((int)tilePosition.x);
+    entityData[2] = Integer.toString((int)tilePosition.y);
+    entityData[3] = centred > 0 ? "1" : "0";
+    
+    String csvData = String.join(",", entityData);
+    return csvData;
+  }
+  
   void secondClick(int x, int y, float centred){};
   
   void onCollision(Player p) {

@@ -50,6 +50,17 @@ class Player extends Rigid_Body {
     jumpDistance = tile_size*2.1;  // jump a little over two tiles
   }
   
+  String getEntityData() {
+    String[] entityData = new String[4];
+    entityData[0] = "p";
+    entityData[1] = Integer.toString((int)tilePosition.x);
+    entityData[2] = Integer.toString((int)tilePosition.y);
+    entityData[3] = Integer.toString((int) (orientation/HALF_PI));
+    
+    String csvData = String.join(",", entityData);
+    return csvData;
+  }
+  
   void updateSize(float tile_size, float shift) {    
     this.tile_size = tile_size;
     this.shift = shift;

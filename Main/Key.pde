@@ -16,6 +16,18 @@ class Key extends Interactable {
     this.position.y += tile_size*this.centred;
   }
   
+  String getEntityData() {
+    String[] entityData = new String[5];
+    entityData[0] = "k";
+    entityData[1] = Integer.toString((int)tilePosition.x);
+    entityData[2] = Integer.toString((int)tilePosition.y);
+    entityData[3] = colourString;
+    entityData[4] = centred > 0 ? "1" : "0";
+    
+    String csvData = String.join(",", entityData);
+    return csvData;
+  }
+  
   void onCollision(Player p) {
     for (Gate g : gates) {
         if (g.colourString.equals(colourString)) {

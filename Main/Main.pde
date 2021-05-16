@@ -122,7 +122,7 @@ void setup() {
 void nextLevel() {
   level++;
   saveGame();
-  current_level = new Level("level_" + level);
+  current_level = new Level("levels\\" + "level_" + level);
 }
 
 void saveGame() {
@@ -133,12 +133,17 @@ void saveGame() {
   saveStrings("savedata/savefile", saveData);
 }
 
+void loadCustomMap(String levelName) {
+  current_level = new Level("custom_maps\\" + levelName);
+  screen = 1;
+}
+
 void loadGame() {
   try {
     String[] saveData = loadStrings("savedata/savefile");
     level = Integer.parseInt(saveData[0]);
     lives = Integer.parseInt(saveData[1]);
-    current_level = new Level("level_" + level);
+    current_level = new Level("levels\\" + "level_" + level);
     screen = 1;
   } catch (NullPointerException e) {
     println("No save file found.");
@@ -149,7 +154,7 @@ void loadGame() {
 
 void startNewGame() {
   level = 1;
-  current_level = new Level("level_" + level);
+  current_level = new Level("levels\\" + "level_" + level);
   
 }
 
@@ -236,14 +241,33 @@ void keyPressed() {
           levelEditor.saveMap();
           screen = 0;
         }
-      } else if (key == BACKSPACE) {
+      } else if (key == BACKSPACE && levelEditor.enteringName) {
         if (levelEditor.levelName.length()>0) {
           levelEditor.levelName=levelEditor.levelName.substring(0, levelEditor.levelName.length()-1);
         }
       } else {
-        levelEditor.levelName += key;
+        if (levelEditor.enteringName) {
+          levelEditor.levelName += key;
+        } else {
+          if (key == 'p') {
+            levelEditor.placePlayer();
+          } else if (key == 'g') {
+            levelEditor.placeGoal();
+          }
+        }
       }
       
+    }
+  } else if (screen == 3) {
+    try {
+      int levelNum = Character.getNumericValue(key);
+      String levelName = levelSelect.getLevelName(levelNum);
+      if (!levelName.equals("levelNotFoundException")) {
+        loadCustomMap(levelName);
+      }
+      
+    } catch (Exception e) {
+      // don't need to do anything here since we can safely ignore all other key presses
     }
   }
 } 
@@ -292,7 +316,11 @@ void loseLife() {
 
 void mousePressed() {
   if (screen == 2) {
-    levelEditor.handleClick(mouseX, mouseY);
+    if (mouseButton == LEFT) {
+      levelEditor.handleClick(mouseX, mouseY);
+    } else if (mouseButton == RIGHT) {
+      levelEditor.removeEntity(mouseX, mouseY);
+    }
   }
 }
 

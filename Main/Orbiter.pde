@@ -5,6 +5,7 @@ class Orbiter extends Interactable {
   float tile_size;
   float radians_per_frame;
   float clockwise;
+  float radius;
   
   Orbiter(int x, int y, float init_dir, float weight, float speed, Boolean centred, boolean clockwise, float tile_size, float proportionalSize, float shift) {
     super(x, y, tile_size, proportionalSize, shift);
@@ -17,14 +18,31 @@ class Orbiter extends Interactable {
     this.position.y += tile_size*this.centred;
     this.clockwise = clockwise ? 1f : -1f;
     //this.size += this.centred*tile_size;
+    
+  }
+  
+  String getEntityData() {
+    String[] entityData = new String[9];
+    entityData[0] = "o";
+    entityData[1] = Integer.toString((int)tilePosition.x);
+    entityData[2] = Integer.toString((int)tilePosition.y);
+    entityData[3] = Float.toString(radius);
+    entityData[4] = "0";
+    entityData[5] = Float.toString(weight);
+    entityData[6] = "4";
+    entityData[7] = centred > 0 ? "1" : "0";
+    entityData[8] = clockwise > 0 ? "1" : "0";
+    
+    String csvData = String.join(",", entityData);
+    return csvData;
   }
   
   void secondClick(int x, int y, float centred) {
     PVector endPoint = new PVector(x*tile_size + shift + centred*tile_size, y*tile_size + centred*tile_size);
-
     endPoint.sub(position);
-
+    
     size = endPoint.mag();
+    radius = endPoint.mag()/tile_size;
   }
   
   void draw() {
@@ -87,8 +105,8 @@ class Orbiter extends Interactable {
     float p2_dist = dist(closestX, closestY, p2_x, p2_y);
     
     if (p1_dist+p2_dist >= size && p1_dist+p2_dist <= size) {
-      dist_x = closestX - player.position.x;
-      dist_y = closestY - player.position.y;
+      dist_x = closestX - x;
+      dist_y = closestY - y;
       distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
       if (distance <= objectSize) {  
         return true;

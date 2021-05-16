@@ -40,7 +40,7 @@ Spike:
 
 
 Circular saw things (think PoE labyrinths)
-"c", pos_x, pos_y, end_pos_x, end_pos_y, size, speed, delay, centred
+"c", pos_x, pos_y, end_pos_x, end_pos_y, speed, delay, centred
 	- delay is the time the saw stops at each end in seconds
 	- speed is given in tiles/second
 
@@ -102,6 +102,9 @@ abilities:
 
 originally I wanted to have the UI class work for both the game and level editor screens but the level editor requires dynamic updating of the parameters, leading to redundant parameters (e.g. which tile is selected) so I just put it in levelEditor
 
+had to change the way entities were initialised such that one function could be called to update their positions to enable level editor stuff. 
+
+mouseClicked() is incredibely slow and doesn't allow for clicking and draggin to paint the level, but also registers too many clicks when placing entities
 
 
 dark blue, light blue, sand, white, player, saw, gate/key, orbiter, jump-pad, spikes, collider

@@ -22,6 +22,16 @@ class Goal {
     img = loadImage("images/goal/goal.png");
   }
   
+  String getEntityData() {
+    String[] entityData = new String[3];
+    entityData[0] = "g";
+    entityData[1] = Integer.toString((int)tilePosition.x);
+    entityData[2] = Integer.toString((int)tilePosition.y);
+    
+    String csvData = String.join(",", entityData);
+    return csvData;
+  }
+  
   void updateSize(float tile_size, float shift) {    
     this.tile_size = tile_size;
     this.shift = shift;

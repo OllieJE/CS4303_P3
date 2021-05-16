@@ -24,6 +24,17 @@ class Spikes extends Interactable {
     timer = 0;
   }
   
+  String getEntityData() {
+    String[] entityData = new String[5];
+    entityData[0] = "s";
+    entityData[1] = Integer.toString((int)tilePosition.x);
+    entityData[2] = Integer.toString((int)tilePosition.y);
+    entityData[3] = "2";
+    entityData[4] = "2";
+    String csvData = String.join(",", entityData);
+    return csvData;
+  }
+  
   void secondClick(int x, int y, float centred){};
   
   void draw() {

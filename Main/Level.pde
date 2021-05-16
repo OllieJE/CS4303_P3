@@ -75,10 +75,9 @@ class Level {
         case "c":
           int dx = Integer.parseInt(entity_data[3]);
           int dy = Integer.parseInt(entity_data[4]);
-          float size = Float.parseFloat(entity_data[5]);
-          speed = Float.parseFloat(entity_data[6]);
-          float delay = Float.parseFloat(entity_data[7]);
-          centred = entity_data[8].equals("1");
+          speed = Float.parseFloat(entity_data[5]);
+          float delay = Float.parseFloat(entity_data[6]);
+          centred = entity_data[7].equals("1");
           interactables.add(new CircularSaw(x_pos, y_pos, dx, dy, speed, delay, centred, tile_size, SAW_PROPORTION, horizontalShift));
           break;
         case "G":
@@ -113,10 +112,10 @@ class Level {
     contacts = new ArrayList<Contact>();
     contactResolver = new ContactResolver();
     
-    String path = "levels\\" + levelName;
+    String path = levelName;
     String[] level_string_data = loadStrings(path);
     
-    String entity_name = "levels\\" + levelName + "_entities";
+    String entity_name = path + "_entities";
     entity_data_list = loadStrings(entity_name);
 
     tilesX = level_string_data[0].length();
