@@ -26,6 +26,8 @@ class Player extends Rigid_Body {
   float proportionalSize;
   float shift;
   
+  boolean onIce;
+  
   Player(int x, int y, float m, Friction f, int facing, float tile_size, float proportionalSize, float shift) {
     super(x*tile_size+tile_size/2, y*tile_size+tile_size/2, m);
     tilePosition = new PVector(x, y);
@@ -47,7 +49,9 @@ class Player extends Rigid_Body {
     airTime = 0;
     
     jumpTime = fps*1.5;
-    jumpDistance = tile_size*2.1;  // jump a little over two tiles
+    jumpDistance = tile_size*2;  // jump two tiles
+    
+    onIce = false;
   }
   
   String getEntityData() {

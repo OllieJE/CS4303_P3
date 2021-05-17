@@ -13,6 +13,9 @@ class Level {
     this.levelName = levelName;
     loadLevel();
     create_ui();
+
+    coeffFriction = tile_size*FRICTION_PROPORTION;
+    push_force = tile_size*PUSH_FORCE_PROPORTION;
   }
   
   void create_ui() {
@@ -185,32 +188,25 @@ class Level {
     int tile_x = int((player_pos_x-horizontalShift)/tile_size);
     int tile_y = int(player_pos_y/tile_size);
     
-    // TODO: FIX THIS TO HANDLE LEVEL CENTERING
-    // check if player is out-of-bounds
-    // check if player has gone too far left
+ 
     if (player_pos_x - player.size/2 <= horizontalShift) {
-      //current_level.create_entities();
       return true;
     }
     // check if player has gone too far right
-    
     else if (player_pos_x + player.size/2 >= horizontalShift+current_level.tilesX*tile_size) {
-      //current_level.create_entities();
       return true;
     }
     // check if player has gone too far up
     if (player_pos_y - player.size/2 <= 0) {
-      //current_level.create_entities();
       return true;
     }
     // check if player has gone too far down
     else if (player_pos_y + player.size/2 >= current_level.tilesY*tile_size) {
-      //current_level.create_entities();
       return true;
     }
     
     // want to get the highest-friction tile the player is on
-    float highest_friction = 1.0;
+    float highest_friction = 0.0;
     
     // iterate through the nine tiles the player could be colliding with
     for (int i = (tile_y-1 >= 0 ? tile_y-1 : 0) ; i <= (tile_y+1 < current_level.tilesY ? tile_y+1 : current_level.tilesY-1); i++) {
@@ -268,11 +264,21 @@ class Level {
       }
       
     }
-    player.player_friction.c = coeffFriction*highest_friction;
-    player.player_friction.c2 = coeffFriction*highest_friction;
+    
+    updatePlayerFriction(highest_friction);
+    
+    player.onIce = highest_friction < 1;
+
+    //player.player_friction.c = coeffFriction*highest_friction;
+    //player.player_friction.c2 = coeffFriction*highest_friction;
     //popMatrix();
     
     return false;
+  }
+  
+  void updatePlayerFriction(float frictionMult) {
+    player.player_friction.c = coeffFriction*frictionMult;
+    player.player_friction.c2 = coeffFriction*frictionMult;
   }
   
 }

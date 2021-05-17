@@ -25,9 +25,14 @@ final int SPIKES_PER_TILE = 5;
 
 final float UI_HEIGHT_PROPORTION = 0.1;
 
-final float FRICTION_PROPORTION = 800000;  // base friction. surface friction is multiplied by this
+//final float FRICTION_PROPORTION = 800000;  // base friction. surface friction is multiplied by this
+final float FRICTION_PROPORTION = 0.000025;  // base friction. surface friction is multiplied by this. this is by tile rather than display width
+// smaller tiles = higher friction
 
-final float PUSH_FORCE_PROPORTION = 32000;
+//final float PUSH_FORCE_PROPORTION = 32000;
+final float PUSH_FORCE_PROPORTION = 0.0006;
+
+float push_force;
 
 final int TEXT_SIZE_PROPORTION = 60;
 
@@ -55,6 +60,7 @@ ArrayList<Contact> contacts;
 final HashMap<String, Float> TILE_FRICTIONS = new HashMap<String, Float>() {{
     put("1", 1.0);
     put("2", 8.0);
+    put("3", 0.0);
 }};
 
 final HashMap<String, int[]> COLOURS = new HashMap<String, int[]>() {{
@@ -108,7 +114,7 @@ void setup() {
   textAlign(CENTER);
   text_size = displayWidth/TEXT_SIZE_PROPORTION;
   
-  coeffFriction = displayWidth/FRICTION_PROPORTION;   
+  coeffFriction = 10.0*FRICTION_PROPORTION;   
   forceRegistry = new ForceRegistry();
   friction = new Friction(coeffFriction, coeffFriction);
   //forceRegistry.add(player, friction);
@@ -327,17 +333,19 @@ void mousePressed() {
 
 void update() {
   
-  if (movingLeft) { 
-    player.addForce(new PVector(displayWidth/PUSH_FORCE_PROPORTION*-1, 0)) ;
-  }
-  if (movingRight) {
-    player.addForce(new PVector(displayWidth/PUSH_FORCE_PROPORTION, 0)) ;
-  }
-  if (movingUp) {
-    player.addForce(new PVector(0, displayWidth/PUSH_FORCE_PROPORTION*-1));
-  }
-  if (movingDown) {
-    player.addForce(new PVector(0, displayWidth/PUSH_FORCE_PROPORTION));
+  if (!player.onIce) {
+    if (movingLeft) { 
+      player.addForce(new PVector(push_force*-1, 0)) ;
+    }
+    if (movingRight) {
+      player.addForce(new PVector(push_force, 0)) ;
+    }
+    if (movingUp) {
+      player.addForce(new PVector(0, push_force*-1));
+    }
+    if (movingDown) {
+      player.addForce(new PVector(0, push_force));
+    }
   }
   
   forceRegistry.updateForces();

@@ -40,7 +40,7 @@ class Rigid_Body {
     
     velocity.add(acceleration);
     
-    if (velocity.mag() < (displayWidth/PUSH_FORCE_PROPORTION)/3) {
+    if (velocity.mag() < (push_force)/3) {
       velocity.mult(0);
     }
         
