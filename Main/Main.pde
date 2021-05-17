@@ -8,6 +8,9 @@ import java.io.FilenameFilter;
 final int PLAYER_ANIMATION_FRAMES = 6;
 final float PLAYER_SIZE_PROPORTION = 0.4;
 
+final int COLLIDER_ANIMATION_FRAMES = 4;
+final int JUMPPAD_ANIMATION_FRAMES = 2;
+
 final float SAW_PROPORTION = 1.0;
 final float COLLIDER_PROPORTION = 0.9;
 final float GATE_PROPORTION = 1.0;

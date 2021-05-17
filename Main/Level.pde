@@ -62,9 +62,9 @@ class Level {
           forceRegistry.add(player, friction);
           break;
         case "s":
-          //float seconds_alive = Float.parseFloat(entity_data[3]);
-          //float seconds_delay = Float.parseFloat(entity_data[4]);
-          //interactables.add(new Spikes(x_pos, y_pos, tile_size, seconds_alive, seconds_delay, SPIKES_PROPORTION, horizontalShift));
+          float seconds_alive = Float.parseFloat(entity_data[3]);
+          float seconds_delay = Float.parseFloat(entity_data[4]);
+          interactables.add(new Spikes(x_pos, y_pos, tile_size, seconds_alive, seconds_delay, SPIKES_PROPORTION, horizontalShift));
           break;
         case "o":
           float radius = Float.parseFloat(entity_data[3]);

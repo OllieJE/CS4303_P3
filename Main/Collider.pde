@@ -1,18 +1,25 @@
 class Collider extends Interactable {
   float centred;
+  Animation animation;
+  float hit;
   
   Collider(int x, int y, boolean centred, float tile_size, float proportionalSize, float shift) {
     super(x, y, tile_size, proportionalSize, shift);
     this.centred = centred ? 0.5 : 0;
     this.position.x += tile_size*this.centred;
     this.position.y += tile_size*this.centred;
+    hit = 0f;
+    animation= new Animation("collider", COLLIDER_ANIMATION_FRAMES);
   }
   
   void draw() {
-    strokeWeight(0);
-    fill(50,168,82);
-    stroke(50,168,82);
-    circle(position.x, position.y, size);
+    //strokeWeight(0);
+    //fill(50,168,82);
+    //stroke(50,168,82);
+    //circle(position.x, position.y, size);
+    animation.display(position.x-size/2, position.y-size/2, size, size, hit > 0);
+    
+    if (hit > 0) hit--;
   }
   
   String getEntityData() {
@@ -33,6 +40,7 @@ class Collider extends Interactable {
     distance.sub(position);
     distance.normalize();
     contacts.add(new Contact(this, p, 1.0, distance));
+    hit = COLLIDER_ANIMATION_FRAMES*3;
   }
   
   Boolean collision(float x, float y, float objectSize) {

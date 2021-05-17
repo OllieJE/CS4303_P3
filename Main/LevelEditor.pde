@@ -192,6 +192,8 @@ class LevelEditor {
         break;
       case 10:
         // spikes
+        Interactable spikes = new Spikes((int)snap1.x, (int)snap1.y, tile_size, 2f, 2f, SPIKES_PROPORTION, horizontalShift);
+        interactables.add(spikes);
         break;
       case 11:
         // collider

@@ -54,7 +54,7 @@ class CircularSaw extends Interactable {
   }
   
   void secondClick(int x, int y, float centred) {
-    target = new PVector(x*tile_size + shift, y*tile_size + centred*tile_size);
+    target = new PVector(end.x*tile_size + shift + this.centred*tile_size, end.y*tile_size + this.centred*tile_size);
     end = new PVector(x, y);
   }
   

@@ -1,5 +1,7 @@
 class Springpad extends Interactable {
   float centred;
+  Animation animation;
+  float hit;
   
   Springpad(int x, int y, boolean centred, float tile_size, float proportionalSize, float shift) {
     
@@ -9,13 +11,17 @@ class Springpad extends Interactable {
     this.position.x += tile_size*this.centred;
     this.position.y += tile_size*this.centred;
     
+    animation = new Animation("jumppad", JUMPPAD_ANIMATION_FRAMES);
   }
   
   void draw() {
-    stroke(0);
-    fill(100);
-    strokeWeight(1);
-    circle(position.x, position.y, size);
+    //stroke(0);
+    //fill(100);
+    //strokeWeight(1);
+    //circle(position.x, position.y, size);
+    animation.display(position.x-size/2, position.y-size/2, size, size, hit == fps || hit == 1);
+    
+    if (hit > 0) hit--;
   }
   
   String getEntityData() {
@@ -30,6 +36,7 @@ class Springpad extends Interactable {
   
   void onCollision(Player p) {
     player.jump();
+    hit = fps;
   }
   
   void secondClick(int x, int y, float centred){};
