@@ -265,27 +265,33 @@ class LevelEditor {
 
   void removeRow() {
     if (rowCount > 1) {
-      HashSet<String[]> entitiesToRemove = new HashSet<String[]>();
-      for (String[] e : entityData) {
-        int yPos = Integer.parseInt(e[2]);
-        // check if entity is on the row that is being deleted
-        if (yPos == levelData.size()-1) {  
-          entitiesToRemove.add(e);
-        }
-        // circular saw can move onto the deleted row
-        if (e[0].equals("c")) {
-          if (Integer.parseInt(e[4]) == levelData.size()-1) {
-            entitiesToRemove.add(e);
-          }
-        }
-      }
+      //HashSet<String[]> entitiesToRemove = new HashSet<String[]>();
+      //for (String[] e : entityData) {
+      //  int yPos = Integer.parseInt(e[2]);
+      //  // check if entity is on the row that is being deleted
+      //  if (yPos == levelData.size()-1) {  
+      //    entitiesToRemove.add(e);
+      //  }
+      //  // circular saw can move onto the deleted row
+      //  if (e[0].equals("c")) {
+      //    if (Integer.parseInt(e[4]) == levelData.size()-1) {
+      //      entitiesToRemove.add(e);
+      //    }
+      //  }
+      //}
 
-      for (String[] e : entitiesToRemove) {
-        entityData.remove(e);
+      //for (String[] e : entitiesToRemove) {
+      //  entityData.remove(e);
+      //}
+      
+      if ((columnCount)*((displayHeight-ui_height)/(rowCount-1)) <= displayWidth) {
+        rowCount--;
+        levelData.remove(levelData.size()-1);
+        updateTileSize();
+       
       }
-      rowCount--;
-      levelData.remove(levelData.size()-1);
-      updateTileSize();
+      
+      
     }
   }
 

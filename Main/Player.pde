@@ -122,7 +122,7 @@ class Player extends Rigid_Body {
   
   void boost() {
     if (boostCooldown <= 0 && !inAir) {
-      boostTime  = 10;
+      boostTime  = fps/5;
       boostCooldown = boostCooldownMax;
       boostDir = new PVector(sin(orientation), -1*cos(orientation));
       boostDir.normalize();
@@ -144,8 +144,8 @@ class Player extends Rigid_Body {
       velocity.x = boostDir.x*vMag;
       velocity.y = boostDir.y*vMag;
       
-      position.x += boostDir.x*(size/4);
-      position.y += boostDir.y*(size/4);
+      position.x += boostDir.x*(size/8);
+      position.y += boostDir.y*(size/8);
     }
     
     if (airTime > 0) {
@@ -163,8 +163,11 @@ class Player extends Rigid_Body {
       
     } else {
       inAir = false;
-      size = baseSize;  // jumping should bring size back down anyway, but just in case
+      //size = baseSize;  // jumping should bring size back down anyway, but just in case
     }
+  }
+  
+  void phaseOut() {
   }
   
   void draw() {

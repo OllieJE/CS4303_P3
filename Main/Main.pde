@@ -57,7 +57,7 @@ float ui_height;
 
 int lives;
 int level;
-final int MAX_LEVELS = 7;
+final int MAX_LEVELS = 8;
 
 Player player;
 List<Key> keys;
@@ -162,11 +162,77 @@ void setup() {
   //current_level = new Level(1);
   screen = 0;
   
-  theme=minim.loadFile("audio/seashanty2.mp3");
-  theme.loop();
+  //theme=minim.loadFile("audio/seashanty2.mp3");
+  //theme.loop();
  
 }
 
+boolean linePoint(float x1, float y1, float x2, float y2, float px, float py) {
+
+  float d1 = dist(px,py, x1,y1);
+  float d2 = dist(px,py, x2,y2);
+
+  float lineLen = dist(x1,y1, x2,y2);
+
+  float buffer = 0.1; 
+
+  if (d1+d2 >= lineLen-buffer && d1+d2 <= lineLen+buffer) {
+    return true;
+  }
+  return false;
+}
+
+boolean lineCircle(float x1, float y1, float x2, float y2, float cx, float cy, float r) {
+
+  // is either end INSIDE the circle?
+  // if so, return true immediately
+  boolean inside1 = pointCircle(x1,y1, cx,cy,r);
+  boolean inside2 = pointCircle(x2,y2, cx,cy,r);
+  if (inside1 || inside2) return true;
+
+  // get length of the line
+  float distX = x1 - x2;
+  float distY = y1 - y2;
+  float len = sqrt( (distX*distX) + (distY*distY) );
+
+  // get dot product of the line and circle
+  float dot = ( ((cx-x1)*(x2-x1)) + ((cy-y1)*(y2-y1)) ) / pow(len,2);
+
+  // find the closest point on the line
+  float closestX = x1 + (dot * (x2-x1));
+  float closestY = y1 + (dot * (y2-y1));
+
+  // is this point actually on the line segment?
+  // if so keep going, but if not, return false
+  boolean onSegment = linePoint(x1,y1,x2,y2, closestX,closestY);
+  if (!onSegment) return false;
+
+  // get distance to closest point
+  distX = closestX - cx;
+  distY = closestY - cy;
+  float distance = sqrt( (distX*distX) + (distY*distY) );
+
+  if (distance <= r) {
+    return true;
+  }
+  return false;
+}
+
+boolean pointCircle(float px, float py, float cx, float cy, float r) {
+
+  // get distance between the point and circle's center
+  // using the Pythagorean Theorem
+  float distX = px - cx;
+  float distY = py - cy;
+  float distance = sqrt( (distX*distX) + (distY*distY) );
+
+  // if the distance is less than the circle's
+  // radius the point is inside!
+  if (distance <= r) {
+    return true;
+  }
+  return false;
+}
 
 void deleteSave() {
   String path = sketchPath();
@@ -181,12 +247,12 @@ void deleteSave() {
 
 void nextLevel() {
   updateRunTime();
-  level++;
   
   if (level == MAX_LEVELS) {
     winScreen = new WinScreen();
     screen = 6;
   } else {
+    level++;
     saveGame();
     current_level = new Level("levels\\" + "level_" + level);
   }
@@ -271,6 +337,7 @@ void keyPressed() {
           break;
         case '2':
           player.useSand();
+          break;
           //int[] playerPos = current_level.getPlayerTilePos();
           //current_level.changeTile(playerPos[0], playerPos[1], "2");
       }
@@ -335,38 +402,55 @@ void keyPressed() {
           levelEditor.saveMap();
           screen = 0;
         }
-      } else if (key == BACKSPACE && levelEditor.enteringName) {
-        if (levelEditor.levelName.length()>0) {
-          levelEditor.levelName=levelEditor.levelName.substring(0, levelEditor.levelName.length()-1);
-        }
-      } else {
+      } else if (key == BACKSPACE) {
         if (levelEditor.enteringName) {
-          levelEditor.levelName += key;
-        } else {
-          if (key == 'p') {
-            levelEditor.placePlayer();
-          } else if (key == 'g') {
-            levelEditor.placeGoal();
+            if (levelEditor.levelName.length()>0) {
+              levelEditor.levelName=levelEditor.levelName.substring(0, levelEditor.levelName.length()-1);
+            }
+          } else {
+            screen = 0;
+          }
+      } else {
+          if (levelEditor.enteringName) {
+            levelEditor.levelName += key;
+          } else {
+            if (key == 'p') {
+              levelEditor.placePlayer();
+            } else if (key == 'g') {
+              levelEditor.placeGoal();
+            }
           }
         }
-      }
+      
       
     }
   } else if (screen == 3) {
     try {
-      if (key == ENTER || key == RETURN) {
-        playSound("audio/menu_select.mp3");
-        screen = 0;
+      if (key == CODED) {
+        switch (keyCode) {
+          case LEFT :
+            playSound("audio/menu_select.mp3");
+            levelSelect.pageLeft();
+            break ;
+          case RIGHT :
+            playSound("audio/menu_select.mp3");
+            levelSelect.pageRight();
+            break ;
+        }
+      } else {
+        if (key == ENTER || key == RETURN) {
+          playSound("audio/menu_select.mp3");
+          screen = 0;
+        } else {
+          int levelNum = Character.getNumericValue(key);
+          String levelName = levelSelect.getLevelName(levelNum);
+          if (!levelName.equals("levelNotFoundException")) {
+            playSound("audio/menu_select.mp3");
+            playingCustomGame = true;
+            loadCustomMap(levelName);
+          }
+        }
       }
-      int levelNum = Character.getNumericValue(key);
-      String levelName = levelSelect.getLevelName(levelNum);
-      println(levelName);
-      if (!levelName.equals("levelNotFoundException")) {
-        playSound("audio/menu_select.mp3");
-        playingCustomGame = true;
-        loadCustomMap(levelName);
-      }
-      
     } catch (Exception e) {
       // don't need to do anything here since we can safely ignore all other key presses
     }
@@ -416,7 +500,6 @@ void restartLevel() {
 void loseLife() {
   lives--;
   spawnProtection = maxSpawnProtection;
-  println(spawnProtection);
   
   if (!playingCustomGame) {
     saveGame();
@@ -493,7 +576,8 @@ void update() {
 }
 
 void draw() {
-  background(0, 100, 200);
+  int[] defaultBg = COLOURS.get("darkblue");
+  background(defaultBg[0], defaultBg[1], defaultBg[2]);
   
   if (screen == 0) {
     image(menuImage, 0, 0, displayWidth, displayHeight);

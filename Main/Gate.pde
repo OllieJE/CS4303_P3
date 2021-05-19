@@ -48,12 +48,13 @@ class Gate extends Interactable {
   }
   
   void onCollision(Player p) {
-    p.position.x += p.velocity.x*-0.3;
-    p.position.y += p.velocity.y*-0.3;
-    p.position.x += p.velocity.x*-1;
-    p.position.y += p.velocity.y*-1;
-    p.velocity.mult(0);
-    p.acceleration.mult(0);
+    loseLife();
+    //p.position.x += p.velocity.x*-0.3;
+    //p.position.y += p.velocity.y*-0.3;
+    //p.position.x += p.velocity.x*-1;
+    //p.position.y += p.velocity.y*-1;
+    //p.velocity.mult(0);
+    //p.acceleration.mult(0);
   }
   
   Boolean collision (float x, float y, float objectSize) {
@@ -62,47 +63,10 @@ class Gate extends Interactable {
     }
     float p1_x = position.x + startPoint.x;
     float p1_y = position.y + startPoint.y;
-    
-    float dist_x = x - position.x;
-    float dist_y = y - position.y;
-    float distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
-    
-    if (distance <= objectSize/2) {
-      return true;
-    }
-    
     float p2_x = position.x + endPoint.x;
     float p2_y = position.y + endPoint.y;
     
-    dist_x = x - p2_x;
-    dist_y = y - p2_y;
-    distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
+    return lineCircle(p1_x,p1_y, p2_x,p2_y, x,y,objectSize/2);
     
-    if (distance <= objectSize/2) {
-      return true;
-    }
-    
-    // get closest point on unbounded line
-    float dot = ( ((x-p1_x)*(p2_x-p1_x)) + ((y-p1_y)*(p2_y-p1_y)) ) / pow(size,2);
-    float closestX = p1_x + (dot * (p2_x-p1_x));
-    float closestY = p1_y + (dot * (p2_y-p1_y));
-    
-    // check if the point found is on the line
-    float p1_dist = dist(closestX, closestY, p1_x, p1_y);
-    float p2_dist = dist(closestX, closestY, p2_x, p2_y);
-    
-    if (p1_dist+p2_dist >= size && p1_dist+p2_dist <= size) {
-      dist_x = closestX - x;
-      dist_y = closestY - y;
-      distance = (float)Math.sqrt((dist_x*dist_x) + (dist_y*dist_y));
-      if (distance <= objectSize/2) {  
-        return true;
-      }
-      
-    } else {
-      return false;
-    }
-    
-    return false;
   }
 }
