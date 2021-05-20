@@ -8,7 +8,7 @@ import java.io.FilenameFilter;
 import ddf.minim.*;
 
 final int PLAYER_ANIMATION_FRAMES = 6;
-final float PLAYER_SIZE_PROPORTION = 0.4;
+final float PLAYER_SIZE_PROPORTION = 0.5;
 
 final int COLLIDER_ANIMATION_FRAMES = 4;
 final int JUMPPAD_ANIMATION_FRAMES = 2;
@@ -57,7 +57,7 @@ float ui_height;
 
 int lives;
 int level;
-final int MAX_LEVELS = 8;
+final int MAX_LEVELS = 10;
 
 Player player;
 List<Key> keys;
@@ -131,6 +131,24 @@ GameOverScreen gameOverScreen;
 AudioPlayer theme;
 
 void setup() {
+  float x1 = 58;
+  float x2 = 45;
+  float y1 = 22;
+  float y2 = 71;
+  
+  float distX = x1 - x2;
+  float distY = y1 - y2;
+  float len = sqrt( (distX*distX) + (distY*distY) );
+  
+  float cx = 14.5;
+  float cy = 66.6;
+  
+  float dot = ( ((cx-x1)*(x2-x1)) + ((cy-y1)*(y2-y1)) ) / pow(len,2);
+  
+  println(dot);
+  
+  PVector test1 = new PVector(x1, x2);
+  
   fullScreen();
   frameRate(fps);
   
@@ -438,7 +456,7 @@ void keyPressed() {
             break ;
         }
       } else {
-        if (key == ENTER || key == RETURN) {
+        if (key == ENTER || key == RETURN || key == BACKSPACE) {
           playSound("audio/menu_select.mp3");
           screen = 0;
         } else {
@@ -489,12 +507,6 @@ void updateRunTime() {
   endTime = System.currentTimeMillis();
   runTime += (endTime - startTime);
   startTime = System.currentTimeMillis(); 
-}
-
-
-void restartLevel() {
-  // TODO: add functionality
-  return;
 }
 
 void loseLife() {

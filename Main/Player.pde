@@ -50,7 +50,7 @@ class Player extends Rigid_Body {
     airTime = 0;
     
     jumpTime = fps*1.5;
-    jumpDistance = tile_size*2;  // jump two tiles
+    jumpDistance = tile_size*2.1;  // jump two tiles
     
     onIce = false;
   }
@@ -112,7 +112,7 @@ class Player extends Rigid_Body {
   }
   
   void jump() {
-    
+    boostTime = 0;
     if (airTime <= 0) {
       airTime = jumpTime;  // time in air
       jumpDir = velocity.copy().normalize();
@@ -144,8 +144,8 @@ class Player extends Rigid_Body {
       velocity.x = boostDir.x*vMag;
       velocity.y = boostDir.y*vMag;
       
-      position.x += boostDir.x*(size/8);
-      position.y += boostDir.y*(size/8);
+      position.x += boostDir.x*(size/4);
+      position.y += boostDir.y*(size/4);
     }
     
     if (airTime > 0) {
@@ -216,12 +216,7 @@ class Player extends Rigid_Body {
     //orientation = targetOrientation;
     rotate(orientation);
     animation.display(-size/2, -size/2, size, size, button_pressed);
-    
-    //textAlign(CENTER);
-    //text(targetOrientation, 0, -25);
-    //text(orientation, 0, 25);
-    
-    //animation.display(position.x-size/2, position.y-size/2, size, size);
+
     popMatrix();
   }
 

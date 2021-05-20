@@ -48,13 +48,17 @@ class Gate extends Interactable {
   }
   
   void onCollision(Player p) {
-    loseLife();
-    //p.position.x += p.velocity.x*-0.3;
-    //p.position.y += p.velocity.y*-0.3;
-    //p.position.x += p.velocity.x*-1;
-    //p.position.y += p.velocity.y*-1;
-    //p.velocity.mult(0);
-    //p.acceleration.mult(0);
+    if (player.boostTime > 0) {
+      player.boostTime = 0;
+      player.position.x -= player.boostDir.x*(size/4);
+      player.position.y -= player.boostDir.y*(size/4);
+    }
+    p.position.x += p.velocity.x*-0.3;
+    p.position.y += p.velocity.y*-0.3;
+    p.position.x += p.velocity.x*-1;
+    p.position.y += p.velocity.y*-1;
+    p.velocity.mult(0);
+    p.acceleration.mult(0);
   }
   
   Boolean collision (float x, float y, float objectSize) {

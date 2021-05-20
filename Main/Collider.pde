@@ -13,10 +13,6 @@ class Collider extends Interactable {
   }
   
   void draw() {
-    //strokeWeight(0);
-    //fill(50,168,82);
-    //stroke(50,168,82);
-    //circle(position.x, position.y, size);
     animation.display(position.x-size/2, position.y-size/2, size, size, hit > 0);
     
     if (hit > 0) hit--;
@@ -37,7 +33,6 @@ class Collider extends Interactable {
   
   void onCollision(Player p) {
     playSound("audio/boing.mp3");
-   
     
     // if the player is boosting there's a chance they get stuck insid ethe collider
     if (player.boostTime > 0) {
